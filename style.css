@@ -181,6 +181,23 @@ section h2 { margin-bottom: 15px; color: #333; }
   background: #0077cc;
 }
 
+.contact-info {
+  margin-top: 10px;
+}
+
+.contact-info p {
+  margin: 8px 0;   /* space between email & phone */
+  font-size: 1rem;
+}
+
+.contact-info a {
+  color: #0077cc;
+  text-decoration: none;
+}
+
+.contact-info a:hover {
+  text-decoration: underline;
+}
 
 
 .project-card {
