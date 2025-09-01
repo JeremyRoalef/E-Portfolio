@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Alex's Portfolio</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header>
+    <div class="slideshow-container" aria-label="Profile slideshow">
+      <div class="slides-track">
+        <div class="slide">
+          <img src="cat1.jpg" alt="Profile picture 1" class="profile-img" />
+        </div>
+        <div class="slide">
+          <img src="cat2.jpg" alt="Profile picture 2" class="profile-img" />
+        </div>
+        <div class="slide">
+          <img src="cat3.jpg" alt="Profile picture 3" class="profile-img" />
+        </div>
+      </div>
+
+      <!-- fallback for no-JS -->
+      <noscript>
+        <img src="cat1.jpg" alt="Profile picture" class="profile-img" />
+      </noscript>
+    </div>
+
+    <h1>Jeremy Roalef</h1>
+    <p>Game Programmer & Developer | IT Enthusiast</p>
+  </header>
+
+  <nav>
+    <a href="#about">About</a>
+    <a href="#projects">Projects</a>
+    <a href="#contact">Contact</a>
+  </nav>
+
+  <main>
+    <section id="about">
+      <h2>About Me</h2>
+      <p>I am focused on video game development and programming. I will occationally branch out into other tech-related topics, such as artificial intelligence and databases, to expand my knowledge on computer systems and future technology.</p>
+    </section>
+
+	<section id="projects">
+	  <h2>Projects</h2>
+	  <div class="projects-carousel">
+		<button class="arrow left">&#10094;</button>
+		<div class="projects-track">
+		  
+		  <!-- Game Development -->
+		  <a href="Game Development/index.html" class="project-card">
+			<h3>Game Programming & Development</h3>
+			<p>Video games in Unity & Unreal | My game programming journey</p>
+		  </a>
+		  
+		  <!-- Coding -->
+		  <a href="Coding/index.html" class="project-card">
+			<h3>Coding</h3>
+			<p>Programming projects in C#, Java, and Python</p>
+		  </a>
+		  
+		  <!-- Databases -->
+		  <a href="Databases/index.html" class="project-card">
+			<h3>Databases</h3>
+			<p>Relational databases & data warehousing</p>
+		  </a>
+		  
+		  <!-- 3D Modeling -->
+		  <a href="3D_Modeling/index.html" class="project-card">
+			<h3>3D Modeling & Blender</h3>
+			<p>Modeling, shading, and animating objects in Blender</p>
+		  </a>
+		  
+		  <!-- Artificial Intelligence -->
+		  <a href="Artificial Intelligence/index.html" class="project-card">
+			<h3>Artificial Intelligence</h3>
+			<p>Projects where I used AI and LLM</p>
+		  </a>
+
+		</div>
+		<button class="arrow right">&#10095;</button>
+	  </div>
+	</section>
+
+
+
+    <section id="contact">
+      <h2>Contact Me</h2>
+      <p>Let's work together! Reach me at <a href="mailto:j1roalef1@gmail.com">j1roalef1@gmail</a>.</p>
+    </section>
+  </main>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  /* ============================
+     Slideshow (infinite left-only)
+     ============================ */
+  try {
+    const slideshowContainer = document.querySelector('.slideshow-container');
+    const slidesTrack = document.querySelector('.slides-track'); // track that contains .slide elements
+    if (slideshowContainer && slidesTrack) {
+      let slides = Array.from(slidesTrack.querySelectorAll('.slide'));
+      if (slides.length > 0) {
+        // Clone first slide and append for smooth looping
+        const firstClone = slides[0].cloneNode(true);
+        slidesTrack.appendChild(firstClone);
+        slides = Array.from(slidesTrack.querySelectorAll('.slide')); // update collection (now includes clone)
+
+        const transitionMs = 600;
+        let slideIndex = 0;
+        let slideTimer = null;
+
+        const goToIndex = (i, animate = true) => {
+          if (!animate) slidesTrack.style.transition = 'none';
+          else slidesTrack.style.transition = `transform ${transitionMs}ms ease-in-out`;
+          slidesTrack.style.transform = `translateX(-${i * 100}%)`;
+        };
+
+        const advanceSlide = () => {
+          slideIndex++;
+          goToIndex(slideIndex, true);
+          // If we moved onto the cloned slide, jump back to the real first slide (no animation)
+          if (slideIndex === slides.length - 1) {
+            setTimeout(() => {
+              slideIndex = 0;
+              goToIndex(slideIndex, false);
+            }, transitionMs);
+          }
+        };
+
+        // Start
+        goToIndex(0, false);
+        slideTimer = setInterval(advanceSlide, 3000);
+
+        // Pause on hover/focus
+        slideshowContainer.addEventListener('mouseenter', () => clearInterval(slideTimer));
+        slideshowContainer.addEventListener('mouseleave', () => {
+          clearInterval(slideTimer);
+          slideTimer = setInterval(advanceSlide, 3000);
+        });
+
+        // keep things resilient on resize (no structural changes required but reset transform)
+        window.addEventListener('resize', () => {
+          // ensure we're positioned correctly after resize
+          goToIndex(slideIndex, false);
+        });
+      }
+    }
+  } catch (err) {
+    console.error('Slideshow error:', err);
+  }
+
+  /* =================================
+     Projects carousel (arrow controls)
+     ================================= */
+  try {
+    const projectCarousel = document.querySelector('.projects-carousel');
+    const projectTrack = document.querySelector('.projects-track');
+    const leftBtn = document.querySelector('.arrow.left');
+    const rightBtn = document.querySelector('.arrow.right');
+
+    if (!projectCarousel || !projectTrack || !leftBtn || !rightBtn) {
+      // If any required element is missing, do nothing (no uncaught errors).
+      return;
+    }
+
+    const projectCards = Array.from(projectTrack.querySelectorAll('.project-card'));
+    if (projectCards.length === 0) return;
+
+    // Helper: compute card width including margins
+    function computeCardFullWidth(card) {
+      const style = window.getComputedStyle(card);
+      const marginLeft = parseFloat(style.marginLeft) || 0;
+      const marginRight = parseFloat(style.marginRight) || 0;
+      return Math.round(card.offsetWidth + marginLeft + marginRight);
+    }
+
+    let cardFullWidth = computeCardFullWidth(projectCards[0]);
+    let maxIndex = 0;
+    let index = 0;
+
+    function recalc() {
+      if (projectCards.length === 0) return;
+      cardFullWidth = computeCardFullWidth(projectCards[0]);
+      const visibleWidth = projectCarousel.clientWidth;
+      const totalWidth = cardFullWidth * projectCards.length;
+      const hiddenWidth = totalWidth - visibleWidth;
+      maxIndex = hiddenWidth > 0 ? Math.ceil(hiddenWidth / cardFullWidth) : 0;
+      // ensure index still valid
+      index = Math.max(0, Math.min(index, maxIndex));
+    }
+
+    function updateTrack() {
+      projectTrack.style.transition = 'transform 500ms ease-in-out';
+      projectTrack.style.transform = `translateX(-${index * cardFullWidth}px)`;
+      // optionally hide arrows at ends
+      leftBtn.style.display = index === 0 ? 'none' : '';
+      rightBtn.style.display = index === maxIndex ? 'none' : '';
+    }
+
+    leftBtn.addEventListener('click', () => {
+      index = Math.max(0, index - 1);
+      updateTrack();
+    });
+
+    rightBtn.addEventListener('click', () => {
+      index = Math.min(maxIndex, index + 1);
+      updateTrack();
+    });
+
+    // Recalculate on load + resize (so it adapts to layout changes)
+    recalc();
+    updateTrack();
+    window.addEventListener('resize', () => {
+      recalc();
+      updateTrack();
+    });
+  } catch (err) {
+    console.error('Projects carousel error:', err);
+  }
+});
+</script>
+
+</body>
+</html>
