@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jeremy Roalef - Game Development Projects</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Shared Header / Navigation -->
+  <header>
+    <h1>Game Development Projects</h1>
+    <nav>
+      <a href="../index.html">🏠 Home</a>
+      <a href="../Coding/index.html">💻 Coding</a>
+      <a href="../Artificial Intelligence/index.html">🤖 AI</a>
+      <a href="../Databases/index.html">🗄️ Databases</a>
+      <a href="./index.html">🎮 Game Dev</a>
+    </nav>
+  </header>
+
+  <main>
+    <h2>My Games by Semester</h2>
+    <p>Here are the games I built, organized by semester. Click a semester to expand and view the projects.</p>
+
+    <!-- Semester 1 -->
+    <section class="accordion">
+      <button class="accordion-header">Fall 2024</button>
+      <div class="accordion-content">
+        <article class="game-card">
+          <h3>Platformer Quest</h3>
+          <p><strong>Description:</strong> A 2D side-scrolling platformer featuring enemies and collectibles.</p>
+          <p><strong>Technologies:</strong> Unity, C#</p>
+          <p><strong>Team Members:</strong> Alex Carter, Jane Doe</p>
+          <p><strong>Course:</strong> GameDev 201 – Intro to Unity</p>
+          <p>
+            <a href="https://github.com/username/platformer-quest" target="_blank">GitHub Repo</a> |
+            <a href="play/platformer-quest.html" target="_blank">Play Game</a>
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- Semester 2 -->
+    <section class="accordion">
+      <button class="accordion-header">Spring 2025</button>
+      <div class="accordion-content">
+        <article class="game-card">
+          <h3>RPG Adventure</h3>
+          <p><strong>Description:</strong> A top-down role-playing game with quests and inventory system.</p>
+          <p><strong>Technologies:</strong> Unity, C#, Blender</p>
+          <p><strong>Team Members:</strong> Alex Carter, John Smith</p>
+          <p><strong>Course:</strong> GameDev 301 – Game Systems</p>
+          <p>
+            <a href="https://github.com/username/rpg-adventure" target="_blank">GitHub Repo</a> |
+            <a href="play/rpg-adventure.html" target="_blank">Play Game</a>
+          </p>
+        </article>
+      </div>
+    </section>
+  </main>
+  
+  <!-- Accordion Script -->
+  <script>
+    document.querySelectorAll('.accordion-header').forEach(button => {
+      button.addEventListener('click', () => {
+        button.classList.toggle('active');
+        const content = button.nextElementSibling;
+        if (content.style.maxHeight) {
+          content.style.maxHeight = null;
+        } else {
+          content.style.maxHeight = content.scrollHeight + "px";
+        }
+      });
+    });
+  </script>
+</body>
+</html>
