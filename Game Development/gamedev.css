@@ -199,6 +199,42 @@ main {
   text-decoration: underline;
 }
 
+.project-card {
+  background: #fff;
+  padding: 15px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.project-card h3 {
+  color: #0077cc;
+  margin-bottom: 10px;
+}
+
+.project-card p {
+  margin: 6px 0;
+}
+
+.project-card a {
+  color: #0077cc;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.project-card a:hover {
+  text-decoration: underline;
+}
+
+.project-media {
+  width: 100%;
+  max-height: 250px;
+  object-fit: cover;
+  border-radius: 4px;
+  margin: 10px 0;
+}
+
+
 /* Footer */
 footer {
   text-align: center;
