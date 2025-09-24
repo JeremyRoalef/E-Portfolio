@@ -21,57 +21,367 @@
 
   <main>
   <section class="code-block">
-    <h2>PlayerController.cs</h2>
+    <h2>BackTrackCanvasStack.cs</h2>
     <p class="code-desc">
-      Handles player movement input and applies velocity to the character’s Rigidbody2D.
-      This script lets the player move left and right using the arrow keys or A/D keys.
+This script was used to help me navigate between canvases in a scene. As I became more comfortable with data structures, I found opportunities where
+it makes sense to use them. In this case, the way you would navigate backwards in a UI for a game follows the stack data structure. Thus, I felt it fit to utilize a stack in my game.
     </p>
     <pre><code class="language-cs">
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
-{
-    public float speed = 5f;
-    private Rigidbody2D rb;
+/*
+ * This class will be used to traverse canvases in the same scene. This class is not attached to any game objects.
+ */
 
-    void Start()
+public class BackTrackCanvasStack
+{
+    //Static stack of canvases
+    static Stack<GameObject> previousCanvas = new Stack<GameObject>();
+
+    public static void AddCanvasToStack(GameObject currentCanvas)
     {
-        rb = GetComponent<Rigidbody2D>();
+        //Push canvas to stack
+        previousCanvas.Push(currentCanvas);
     }
 
-    void Update()
+    public static void ReturnToPreviousCanvas(GameObject currentCanvas)
     {
-        float moveX = Input.GetAxis("Horizontal");
-        rb.velocity = new Vector2(moveX * speed, rb.velocity.y);
+        if (previousCanvas.Count > 0)
+        {
+            //Reveal the previous canvas
+            previousCanvas.Pop().SetActive(true);
+
+            //Hide the current canvas
+            currentCanvas.SetActive(false);
+        }
+        //This should NEVER run, but added just in case
+        else
+        {
+            Debug.Log("Somehow, there's no canvas in the stack");
+        }
     }
 }
     </code></pre>
   </section>
 
   <section class="code-block">
-    <h2>EnemyAI.cs</h2>
+    <h2>PlayerMover.cs</h2>
     <p class="code-desc">
-      Makes an enemy follow the player using simple vector math. The enemy constantly
-      moves toward the player’s position at a fixed speed.
+This script handles player movement logic for a third-person movement system. I have made many movement systems for games by this point, but none for third-person perspective.
+Trying to move in third-person perspective requires more than the player input to determine the movement direction; you also need to know the camera's view direciton.
+When I created this script, I learned a lot about vector properties and how to manipulate vectors to get the information I need.
     </p>
     <pre><code class="language-cs">
 using UnityEngine;
+using UnityEngine.InputSystem;
 
-public class EnemyAI : MonoBehaviour
+/*
+ * This script is attached to the player prefab.
+ * 
+ * This script is responsible for moving the player relative to the camera that is looking at the player. This script
+ * will also be responsible for other mechanics involving player movemnt like jumping, running, sprinting, etc.
+ */
+
+//Script requires rigigbody and audio source components
+[RequireComponent(typeof(Rigidbody), typeof(AudioSource))]
+public class PlayerMover : MonoBehaviour
 {
-    public Transform player;
-    public float chaseSpeed = 2f;
+    //Serialized Fields
+    [Header("Movemenet Attributes")]
+
+    [SerializeField]
+    [Tooltip("The speed the player will move at when grounded")]
+    float fltGroundVelocity;
+
+    [SerializeField]
+    [Tooltip("The speed the player will move at when not grounded")]
+    float fltAirVelocity;
+
+    [SerializeField] 
+    InputAction movementInput;
+
+
+    [Header("Jumping Attributes")]
+
+    [SerializeField] 
+    InputAction jumpInput;
+    
+    [SerializeField] 
+    [Min(0)]
+    [Tooltip("The strength of the player's jump")]
+    float fltJumpForce = 100f;
+    
+    [SerializeField] 
+    [Min(0)]
+    [Tooltip("The maximum ground speed the player can move at")]
+    float maxVelocity = 10f;
+
+    [SerializeField]
+    [Min(0)]
+    [Tooltip("The minimum delay between two jump inputs")]
+    float fltJumpLockoutDuration = 1f;
+
+    //Cashe References
+    Rigidbody playerRb;
+    Camera mainCam;
+    AudioSource audioSource;
+
+    //Attributes
+    bool canJump = false;
+    bool isGrounded = false;
+    bool inJumpLockout = false;
+
+    //Event Systems
+    void Awake()
+    {
+        InitializeReferences();
+    }
+
+    void OnEnable()
+    {
+        //Enable input bindings
+        movementInput.Enable();
+        jumpInput.Enable();
+    }
+
+    void OnDisable()
+    {
+        //Disable input bindings
+        movementInput.Disable();
+        jumpInput.Disable();
+    }
 
     void Update()
     {
-        if (player != null)
+        PlayerMoves();
+        PlayerJumps();
+    }
+    void OnCollisionEnter(Collision other)
+    {
+        //Debug.Log("Collision with " + other.gameObject.name + " Tagged " + other.gameObject.tag);
+
+        //Check if colliding with ground object
+        switch (other.gameObject.tag)
         {
-            transform.position = Vector2.MoveTowards(
-                transform.position,
-                player.position,
-                chaseSpeed * Time.deltaTime
-            );
+            //Add cases here for jump logic
+            case "Ground":
+                canJump = true;
+                isGrounded = true;
+                break;
+            default:
+                //Debug.Log("Collision detected, not doing anything");
+                break;
         }
+    }
+
+    void OnCollisionStay(Collision other)
+    {
+        //Debug.Log("Collision with " + other.gameObject.name + " Tagged " + other.gameObject.tag);
+
+        //Check if colliding with ground object
+        switch (other.gameObject.tag)
+        {
+            //Add cases here for jump logic
+            case "Ground":
+                canJump = true;
+                isGrounded = true;
+                break;
+            default:
+                //Debug.Log("Collision stayed, not doing anything");
+                break;
+        }
+    }
+
+    void OnCollisionExit(Collision other)
+    {
+        //Debug.Log("Collision with " + other.gameObject.name + " Tagged " + other.gameObject.tag);
+
+        //Check if colliding with ground object
+        switch (other.gameObject.tag)
+        {
+            //Add cases here for jump logic
+            case "Ground":
+                isGrounded = false;
+                break;
+            default:
+                //Debug.Log("Exiting collision, not doing anything");
+                break;
+        }
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Dangerous"))
+        {
+            KillPlayer();
+        }
+    }
+
+
+    //Public Methods
+    public void LockMovement(float lockoutDuration)
+    {
+        movementInput.Disable();
+        Invoke("EnableMovement", lockoutDuration);
+    }
+
+
+    //Private Mehtods
+    void InitializeReferences()
+    {
+        playerRb = GetComponent<Rigidbody>();
+        audioSource = GetComponent<AudioSource>();
+
+        mainCam = FindObjectOfType<Camera>();
+        if (mainCam == null)
+        {
+            Debug.Log("No camera found");
+        }
+        else
+        {
+            Debug.Log("Camera found");
+        }
+    }
+
+    void PlayerMoves()
+    {
+        /*
+         * Logic:
+         * 
+         * 1)
+         * Do not run if the movement input is deactivated
+         * 
+         * 2)
+         * Get the main camera's forward and right vector & normalize them to remove magnitude
+         * 
+         * 3)
+         * Direction of movement is relative to the cinemachine's looking direction.
+         * Thus, moving the player "forward" is relative to the cinemachine's forward direction
+         * and moving the player "rightward" is relative to the cinemachine's rightward direction
+         * Additionally, player moves quicker and slower based on whether they are grounded or not.
+         * 
+         * 4)
+         * Clamp the min & max velocity for x and z velocity if on the ground
+         */
+
+
+        //1)
+        if (movementInput.enabled == false) {return;}
+
+        //Read the input values of the movement input
+        Vector2 inputDir = movementInput.ReadValue<Vector2>();
+
+        //2)
+        Vector2 forwardDir = new Vector2(
+            mainCam.transform.forward.x,
+            mainCam.transform.forward.z
+            ).normalized;
+        Vector2 rightDir = new Vector2(
+            mainCam.transform.right.x,
+            mainCam.transform.right.z
+            ).normalized;
+
+        //Direction to move
+        Vector3 moveDir = new Vector3(0, 0, 0);
+
+        //3)
+        if (isGrounded)
+        {
+            if (Mathf.Abs(inputDir.x) > Mathf.Epsilon)
+            {
+                //Add rightDir to the moveDir
+                moveDir += new Vector3(rightDir.x * inputDir.x, 0, rightDir.y * inputDir.x) * fltGroundVelocity;
+            }
+            if (Mathf.Abs(inputDir.y) > Mathf.Epsilon)
+            {
+                //Add forwardDir to the moveDir
+                moveDir += new Vector3(forwardDir.x * inputDir.y, 0, forwardDir.y * inputDir.y) * fltGroundVelocity;
+            }
+        }
+        else
+        {
+            if (Mathf.Abs(inputDir.x) > Mathf.Epsilon)
+            {
+                //Add rightDir to the moveDir
+                moveDir += new Vector3(rightDir.x * inputDir.x, 0, rightDir.y * inputDir.x) * fltAirVelocity;
+            }
+            if (Mathf.Abs(inputDir.y) > Mathf.Epsilon)
+            {
+                moveDir += new Vector3(forwardDir.x * inputDir.y, 0, forwardDir.y * inputDir.y) * fltAirVelocity;
+            }
+        }
+        
+        //Apply force to the player
+        playerRb.AddForce(moveDir);
+
+        //4)
+        if (isGrounded)
+        {
+            playerRb.velocity = new Vector3(
+                Mathf.Clamp(playerRb.velocity.x, -maxVelocity, maxVelocity),
+                playerRb.velocity.y,
+                Mathf.Clamp(playerRb.velocity.z, -maxVelocity, maxVelocity)
+                );
+        }
+
+        //Debug movement
+
+        //Debug.Log($"Player velocity: {playerRb.velocity}");
+        //Debug.Log($"Movement direction: {inputDir}");
+        //Debug.Log($"Camera's forward direction = {forwardDir}");
+        //Debug.Log($"Camera's right direction = {rightDir}");
+        //Debug.Log($"Player velocity: {playerRb.velocity}");
+        //Debug.DrawRay(transform.position, playerRb.velocity);
+    }
+
+    void PlayerJumps()
+    {
+        if (jumpInput.ReadValue<float>() > Mathf.Epsilon && CheckIfPlayerCanJump())
+        {
+            playerRb.AddForce(0,fltJumpForce,0);
+            canJump = false;
+            LockJump();
+            PlayJumpSound();
+        }
+    }
+
+    void KillPlayer()
+    {
+        Debug.Log("Time to kill the player");
+    }
+
+    //Method is invoked in LockMovement method
+    void EnableMovement()
+    {
+        movementInput.Enable();
+    }
+
+    bool CheckIfPlayerCanJump()
+    {
+        //Return the conditions for player jumping.
+        //If player can jump and they are not locked out of jumping, this'll return true
+        return isGrounded && canJump && !inJumpLockout;
+    }
+
+    void LockJump()
+    {
+        inJumpLockout = true;
+        Invoke("UnlockJump", fltJumpLockoutDuration);
+    }
+
+    //Called in LockJump method
+    void UnlockJump()
+    {
+        inJumpLockout = false;
+    }
+
+    void PlayJumpSound()
+    {
+        //Stop any previous sound played
+        audioSource.Stop();
+        audioSource.Play();
     }
 }
     </code></pre>

@@ -9,7 +9,7 @@
 <body>
 
   <header>
-    <h1>Code Showcase</h1>
+    <h1>Snow Boarder - Code Showcase</h1>
     <nav>
       <a href="../../../../index.html">🏠 Home</a>
       <a href="../../../index.html">🎮 Back to Game Dev</a>
@@ -21,59 +21,488 @@
 
   <main>
   <section class="code-block">
-    <h2>PlayerController.cs</h2>
+    <h2>LevelLoader.cs</h2>
     <p class="code-desc">
-      Handles player movement input and applies velocity to the character’s Rigidbody2D.
-      This script lets the player move left and right using the arrow keys or A/D keys.
+This script handles the logic for loading levels. It is referenced in many other scripts in my game. Having a level loading manager helped tremendously when I was handling different level loading scenarios.
+By having a dedicated script for level loading, I could easily handle the level loading logic throughout my game.
     </p>
     <pre><code class="language-cs">
+using System.IO;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-public class PlayerController : MonoBehaviour
+public class LevelLoader : MonoBehaviour
 {
-    public float speed = 5f;
-    private Rigidbody2D rb;
-
-    void Start()
+    static LevelLoader _instance;
+    public static LevelLoader Instance
     {
-        rb = GetComponent<Rigidbody2D>();
+        get
+        {
+            if (_instance == null)
+            {
+                //Handle null level loader issues
+                Debug.LogWarning("Warning: No instance in scene. Creating one...");
+                CreateLevelLoaderObj();
+            }
+
+            return _instance;
+        }
     }
 
-    void Update()
+    List<string> sceneNames = new List<string>();
+
+    bool gameHasStarted = false;
+
+    const string LEVEL_1_SCENE_NAME = "Level 1";
+    const string MAIN_MENU_SCENE_NAME = "Main Menu";
+    const string INITIALIZATION_SCENE_NAME = "Initialization";
+    const string BASE_SCENE_LEVEL_NAME = "Level";
+    const string SCORE_SCENE_NAME = "Score Scene";
+    const string MULTIPLE_INSTANCES_WARNING_STRING = "Warning: Multiple instances of LevelLoader detected!";
+    const string MISSING_SCENE_WARNING_STRING = "Warning: Missing scene name!";
+
+    /*
+     * 
+     * ----------------UNITY EVENTS----------------
+     * 
+     */
+
+    private void Awake()
     {
-        float moveX = Input.GetAxis("Horizontal");
-        rb.velocity = new Vector2(moveX * speed, rb.velocity.y);
+        InitializeSingleton();
+    }
+
+    private void Start()
+    {
+        if (gameHasStarted) return;
+        if (!SceneExists(MAIN_MENU_SCENE_NAME))
+        {
+            Debug.LogWarning(MISSING_SCENE_WARNING_STRING);
+            return;
+        }
+
+        gameHasStarted = true;
+        LoadMainMenu();
+    }
+
+    /*
+     * 
+     * ----------------PUBLIC METHODS----------------
+     * 
+     */
+
+    /// <summary>
+    /// Load a scene in the build profiles by index given delay
+    /// </summary>
+    /// <param name="buildIndex">Index of the scene in build settings</param>
+    /// <param name="delay">Delay before loading the scene</param>
+    public void LoadLevel(int buildIndex, float delay = 0)
+    {
+        if (!SceneExists(buildIndex))
+        {
+            Debug.LogWarning(MISSING_SCENE_WARNING_STRING);
+            return;
+        }
+
+        StartCoroutine(LoadSceneCoroutine(buildIndex, delay));
+    }
+
+    /// <summary>
+    /// Load a scene in the build profiles by name given delay
+    /// </summary>
+    /// <param name="levelName">The name of the scene in build settings</param>
+    /// <param name="delay">Delay before loading the scene</param>
+    public void LoadLevel(string levelName, float delay = 0)
+    {
+        if (!SceneExists(levelName))
+        {
+            Debug.LogWarning(MISSING_SCENE_WARNING_STRING);
+            return;
+        }
+
+        StartCoroutine(LoadSceneCoroutine(levelName, delay));
+    }
+
+    /// <summary>
+    /// Mehtod to load the first level in the game
+    /// </summary>
+    public void LoadFirstLevel(float delay = 0)
+    {
+        if (!SceneExists(LEVEL_1_SCENE_NAME))
+        {
+            Debug.LogWarning(MISSING_SCENE_WARNING_STRING);
+            return;
+        }
+
+        StartCoroutine(LoadSceneCoroutine(LEVEL_1_SCENE_NAME, delay));
+    }
+
+    /// <summary>
+    /// Method to load the main menu scene
+    /// </summary>
+    public void LoadMainMenu(float delay = 0)
+    {
+        if (!SceneExists(MAIN_MENU_SCENE_NAME))
+        {
+            Debug.LogWarning(MISSING_SCENE_WARNING_STRING);
+            return;
+        }
+
+        StartCoroutine(LoadSceneCoroutine(MAIN_MENU_SCENE_NAME, delay));
+    }
+
+    /// <summary>
+    /// Method to load the scene named Score
+    /// </summary>
+    /// <param name="delay">Delay before loading the scene</param>
+    public void LoadScoreScene(float delay = 0)
+    {
+        if (!SceneExists(SCORE_SCENE_NAME))
+        {
+            Debug.LogWarning(MISSING_SCENE_WARNING_STRING);
+            return;
+        }
+
+        StartCoroutine(LoadSceneCoroutine(SCORE_SCENE_NAME, delay));
+    }
+
+    /// <summary>
+    /// Method to get the name of all levels in the game
+    /// </summary>
+    /// <returns>List of all level names</returns>
+    public List<string> GetAllLevelNames()
+    {
+        return sceneNames;
+    }
+
+    /// <summary>
+    /// Method to reload the active scene
+    /// </summary>
+    /// <param name="delay">Delay before reloading the active scene</param>
+    public void ReloadActiveScene(float delay = 0)
+    {
+        int buildIndex = SceneManager.GetActiveScene().buildIndex;
+        StartCoroutine(LoadSceneCoroutine(buildIndex, delay));
+    }
+
+    /// <summary>
+    /// Method to determine whether the next scene exists given current scene
+    /// </summary>
+    /// <param name="currentSceneIndex">The index of the current scene</param>
+    /// <returns>True if next scene exists. False otherwise</returns>
+    public bool NextLevelExists(int currentSceneIndex)
+    {
+        return SceneExists(currentSceneIndex + 1);
+    }
+
+    /// <summary>
+    /// Method to determine whether the next scene exists given current scene
+    /// </summary>
+    /// <param name="currentSceneName">The name of the current scene</param>
+    /// <returns>True if next scene exists. False otherwise</returns>
+    public bool NextLevelExists(string currentSceneName)
+    {
+        for (int i = 0; i < sceneNames.Count; i++)
+        {
+            if (sceneNames[i].Equals(currentSceneName) && i != sceneNames.Count - 1)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Method to load the next level
+    /// </summary>
+    /// <param name="delay">Delay before loading the next level</param>
+    public void LoadNextLevel(float delay = 0)
+    {
+        int nextLevelBuildIndex = SceneManager.GetActiveScene().buildIndex + 1;
+
+        if (SceneExists(nextLevelBuildIndex))
+        {
+            StartCoroutine(LoadSceneCoroutine(nextLevelBuildIndex, delay));
+        }
+        else
+        {
+            LoadScoreScene(delay);
+        }
+    }
+
+    /*
+     * 
+     * ----------------PRIVATE METHODS----------------
+     * 
+     */
+
+    void InitializeSingleton()
+    {
+        //Singleton pattern
+        if (_instance == null)
+        {
+            _instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+            Debug.LogWarning(MULTIPLE_INSTANCES_WARNING_STRING);
+        }
+
+        //Initializing all levels into a list
+        for (int i = 0; i < SceneManager.sceneCountInBuildSettings; i++)
+        {
+            //ChatGPT correction for Using scenes in build settings
+            string path = SceneUtility.GetScenePathByBuildIndex(i);
+            string name = Path.GetFileNameWithoutExtension(path);
+
+            if (name.Contains(BASE_SCENE_LEVEL_NAME))
+            {
+                sceneNames.Add(name);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Method to check if a scene exists given the index
+    /// </summary>
+    /// <param name="buildIndex">The scene's build index from the build settings</param>
+    /// <returns>True if scene exists. False otherwise</returns>
+    bool SceneExists(int buildIndex)
+    {
+        return buildIndex >= 0 && buildIndex < SceneManager.sceneCountInBuildSettings;
+    }
+
+    /// <summary>
+    /// Method to check if a scene exists given the name
+    /// </summary>
+    /// <param name="sceneName">The name of the scene in question</param>
+    /// <returns>True if scene exists. False otherwise</returns>
+    bool SceneExists(string sceneName)
+    {
+        //Method generated by ChatGPT to handle invalid scene names
+
+        //Loop through all scenes in build settings
+        for (int i = 0; i < SceneManager.sceneCountInBuildSettings; i++)
+        {
+            //Get the name of the scene
+            string path = SceneUtility.GetScenePathByBuildIndex(i);
+            string name = Path.GetFileNameWithoutExtension(path);
+
+            //Check if scene names are same
+            if (name.Equals(sceneName)) return true;
+        }
+
+        //No scene found
+        return false;
+    }
+
+    /// <summary>
+    /// Coroutine to load a given scene
+    /// </summary>
+    /// <param name="buildIndex">The index of the scene</param>
+    /// <param name="delay">Delay before scene load</param>
+    IEnumerator LoadSceneCoroutine(int buildIndex, float delay = 0)
+    {
+        yield return new WaitForSeconds(delay);
+        SceneManager.LoadScene(buildIndex);
+    }
+
+    /// <summary>
+    /// Coroutine to load a given scene
+    /// </summary>
+    /// <param name="sceneName"></param>
+    /// <param name="delay"></param>
+    IEnumerator LoadSceneCoroutine(string sceneName, float delay = 0)
+    {
+        yield return new WaitForSeconds(delay);
+        SceneManager.LoadScene(sceneName);
+    }
+
+    /// <summary>
+    /// Method to handle null _instance reference
+    /// </summary>
+    private static void CreateLevelLoaderObj()
+    {
+        //Create the game obeject
+        GameObject newLevelLoaderObj = Instantiate(
+            new GameObject(),
+            new Vector3(0, 0, 0),
+            Quaternion.identity);
+
+        newLevelLoaderObj.name = "Level Loader";
+
+        //Singleton
+        DontDestroyOnLoad(newLevelLoaderObj);
+
+        //Add the level loader scripts
+        LevelLoader newLevelLoader = newLevelLoaderObj.AddComponent<LevelLoader>();
+
+        //Set the instance
+        _instance = newLevelLoader;
     }
 }
     </code></pre>
   </section>
 
   <section class="code-block">
-    <h2>EnemyAI.cs</h2>
+    <h2>ObjectReference.cs</h2>
     <p class="code-desc">
-      Makes an enemy follow the player using simple vector math. The enemy constantly
-      moves toward the player’s position at a fixed speed.
+This little script was a helpful addition to my project. the script tests if a given reference points to a null object in memory. In my other scripts,
+I would constantly test if an object reference is null. If it was, my code would fail without a check. I got tired of writing out the conditions for if statements so much that I made this script.
     </p>
     <pre><code class="language-cs">
 using UnityEngine;
 
-public class EnemyAI : MonoBehaviour
+public static class ObjectReference
 {
-    public Transform player;
-    public float chaseSpeed = 2f;
-
-    void Update()
+    /// <summary>
+    /// Method to determine whether the given object reference is null
+    /// </summary>
+    /// <param name="reference">the object reference</param>
+    /// <param name="warningIfNull">the message displayed to console if null</param>
+    /// <returns>true if null. false if not null</returns>
+    public static bool IsNull(object reference, string warningIfNull)
     {
-        if (player != null)
+        if (reference == null)
         {
-            transform.position = Vector2.MoveTowards(
-                transform.position,
-                player.position,
-                chaseSpeed * Time.deltaTime
-            );
+            Debug.LogWarning(warningIfNull);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public static bool IsNull(UnityEngine.Object reference, string warningIfNull)
+    {
+        if (reference == null)
+        {
+            Debug.LogWarning(warningIfNull);
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 }
+    </code></pre>
+  </section>
+  
+    <section class="code-block">
+    <h2>CrashDetector.cs</h2>
+    <p class="code-desc">
+This script handles the crash logic for the player. I wanted to add this to demonstrate how I used my ObjectReference script. In my OnCollisionEnter2D script,
+I call ObjectReference 3 times before I determine that it is safe to continue.<br><br>Admittidely, creating the system for the null object reference check was
+more of a hassle than the problem it solved. Regardless, it was fun to learn the many ways I may code scripts to solve my problems.
+    </p>
+    <pre><code class="language-cs">
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+public class CrashDetector : MonoBehaviour
+{
+    [Header("References")]
+    [SerializeField]
+    [Tooltip("The particle system responsible for player dying")]
+    ParticleSystem crashVFX;
+
+    [SerializeField]
+    [Tooltip("The audio clip that sounds like the player crashing")]
+    AudioClip crashSFX;
+
+    [SerializeField]
+    [Tooltip("The audio source attached to this obejct")]
+    AudioSource audioSource;
+
+    [Header("Settings")]
+    [SerializeField]
+    [Tooltip("The delay before loading a scene")]
+    float reloadDelay = 1f;
+
+    Player player;
+
+    public bool HasFinishedLevel { get; set; }
+    public bool HasCrashed { get; set; }
+
+    const string NULL_CRASH_VFX_STRING = "Warning: No crash VFX given!";
+    const string NULL_CRASH_SFX_STRING = "Warning: No crash SFX given!";
+    const string NULL_PLAYER_MOVEMENT_STRING = "Warning: No PlayerMovement script in scene!";
+    const string NULL_AUDIO_SOURCE_STRING = "Warning: No audio source component found!";
+    const string GROUND_TAG_STRING = "Ground";
+
+    /*
+     * 
+     * ---------------UNITY EVENTS---------------
+     * 
+     */
+
+    private void Start()
+    {
+        InitializeReferences();
+    }
+
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        //Conditions preventing trigger enter
+        if (HasCrashed) return;
+        if (HasFinishedLevel) return;
+        if (!other.gameObject.CompareTag(GROUND_TAG_STRING)) return;
+        if (ObjectReference.IsNull(player, NULL_PLAYER_MOVEMENT_STRING)) return;
+        if (ObjectReference.IsNull(crashVFX, NULL_CRASH_VFX_STRING)) return;
+        if (ObjectReference.IsNull(audioSource, NULL_AUDIO_SOURCE_STRING)) return;
+
+
+        //play FX
+        crashVFX.Play();
+        audioSource.PlayOneShot(crashSFX);
+
+        //Trigger enter logic
+        HasCrashed = true;
+        player.SetLifeState(false);
+        ReloadScene(reloadDelay);
+    }
+
+    /*
+     * 
+     * ---------------PRIVATE METHODS---------------
+     * 
+     */
+
+    /// <summary>
+    /// Method to reload the current scene
+    /// </summary>
+    /// <param name="delay">Delay before reloading scene</param>
+    void ReloadScene(float delay) => 
+        LevelLoader.Instance.LoadLevel(SceneManager.GetActiveScene().buildIndex, delay);
+
+    /// <summary>
+    /// Method to initialize the crash detector script
+    /// </summary>
+    void InitializeReferences()
+    {
+        HasCrashed = false;
+        HasFinishedLevel = false;
+
+        //Check serialized fields
+        ObjectReference.IsNull(crashVFX, NULL_CRASH_VFX_STRING);
+        ObjectReference.IsNull(crashSFX, NULL_CRASH_SFX_STRING);
+        ObjectReference.IsNull(audioSource, NULL_AUDIO_SOURCE_STRING);
+
+        //Get object references
+        player = FindObjectOfType<Player>();
+        ObjectReference.IsNull(player, NULL_PLAYER_MOVEMENT_STRING);
+    }
+}
+
     </code></pre>
   </section>
 </main>

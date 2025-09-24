@@ -21,56 +21,114 @@
 
   <main>
   <section class="code-block">
-    <h2>PlayerController.cs</h2>
+    <h2>Mover.cs</h2>
     <p class="code-desc">
-      Handles player movement input and applies velocity to the character’s Rigidbody2D.
-      This script lets the player move left and right using the arrow keys or A/D keys.
+This script handles movement logic for my mover objects (the spehres in the game). While small, the script highlights the power of making one script 
+do one thing. The mover script moves objects. You can customize when it initially starts moving, the time it will move for, its speed, and delay before the next movement.
     </p>
     <pre><code class="language-cs">
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class Mover : MonoBehaviour
 {
-    public float speed = 5f;
-    private Rigidbody2D rb;
+    //serialize fields for duration of move, speed, time to wait, and initial delay
+    [SerializeField] float fltMoveTime;
+    [SerializeField] float fltMoveSpeed;
+    [SerializeField] float fltTimeToWait;
+    [SerializeField] float fltInitialDelay;
 
-    void Start()
+    //Create placeholder variables to store values of time variables
+    float fltResetMoveTime;
+    float fltResetTimeToWait;
+
+    private void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
+        //initialize placeholder variable values
+        fltResetMoveTime = fltMoveTime;
+        fltResetTimeToWait = fltTimeToWait;
+    }
+    private void Update()
+    {
+        //Wait for the initial delay before moving
+        if (fltInitialDelay > .01f)
+        {
+            fltInitialDelay -= Time.deltaTime; //Reduce the initial delay by elapsed time
+            return; //Do not run any more in Update method
+        }
+
+
+        //If not waitting to move (Time to wait = 0), move the object
+        if (fltResetTimeToWait < 0.01f)
+        {
+            MoveObject();
+        }
+        //Otherwise, reduce the time to wait by the change in time
+        else
+        {
+            fltResetTimeToWait -= Time.deltaTime;
+        }
     }
 
-    void Update()
+    void MoveObject()
     {
-        float moveX = Input.GetAxis("Horizontal");
-        rb.velocity = new Vector2(moveX * speed, rb.velocity.y);
+        //if move time is not equal to 0, move the object at given speed
+        if (fltResetMoveTime > 0.01f)
+        {
+            transform.Translate(fltMoveSpeed * Time.deltaTime, 0, 0); //Move object in x-direction
+            fltResetMoveTime -= Time.deltaTime; //decrease move time by the change in time
+        }
+        //Otherwise, reverse move speed, reset move time and time to wait
+        else
+        {
+            fltMoveSpeed *= -1;
+            fltResetTimeToWait = fltTimeToWait;
+            fltResetMoveTime = fltMoveTime;
+        }
     }
 }
     </code></pre>
   </section>
 
   <section class="code-block">
-    <h2>EnemyAI.cs</h2>
+    <h2>WallMover.cs</h2>
     <p class="code-desc">
-      Makes an enemy follow the player using simple vector math. The enemy constantly
-      moves toward the player’s position at a fixed speed.
+This script controls how the wall at the end of my game moves. When I write scripts, I normally try to write them to have repeatable behavior. In this case,
+I just needed something done once and quick. In hindsight, the script could have been written to move many types of walls, but for my little project, that was not happening.
     </p>
     <pre><code class="language-cs">
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyAI : MonoBehaviour
+public class WallMover : MonoBehaviour
 {
-    public Transform player;
-    public float chaseSpeed = 2f;
+    bool boolCanPass = false;
+    int intNumOfCollectibles = 0;
+
+    void Start()
+    {
+        //get the number of collectibles in the scene
+        intNumOfCollectibles = GameObject.FindGameObjectsWithTag("Collectible").Length;
+        Debug.Log("Number of collectibles: " + intNumOfCollectibles);
+    }
 
     void Update()
     {
-        if (player != null)
+        if (boolCanPass)
         {
-            transform.position = Vector2.MoveTowards(
-                transform.position,
-                player.position,
-                chaseSpeed * Time.deltaTime
-            );
+            transform.Translate(0,-1*Time.deltaTime,0); //Move wall out of the way
+        }
+    }
+
+    //Create a public method to tell script when a collectible has been collected
+    public void PlayerCollectedCollectible()
+    {
+        intNumOfCollectibles--;
+        if (intNumOfCollectibles == 0)
+        {
+            boolCanPass = true; //There are no more collectibles
         }
     }
 }

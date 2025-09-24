@@ -23,55 +23,95 @@
   <section class="code-block">
     <h2>PlayerController.cs</h2>
     <p class="code-desc">
-      Handles player movement input and applies velocity to the character’s Rigidbody2D.
-      This script lets the player move left and right using the arrow keys or A/D keys.
+This script controls the health for the player. It also holds many references to other components in my scene. If you tried playing Laser Defender, you may notice
+that you get an error message when you die. That is because I managed to reference null objects in my health script. 
+<br><br>This script highlights a fundamental problem when programming: how do I handle references? Realistically, the health script does not need to know about the audio, the score, or the level manager, but they are all
+stored in this script. While I would learn about the power of event-driven code in the future to solve this problem, this script began to make me question how I may handle this referencing problem.
     </p>
     <pre><code class="language-cs">
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class Health : MonoBehaviour
 {
-    public float speed = 5f;
-    private Rigidbody2D rb;
+    [SerializeField] bool boolIsPlayer;
+    [SerializeField] int intHealth = 50;
+    [SerializeField] ParticleSystem hitEffect;
 
-    void Start()
+
+    Camerashake cameraShake;
+    [SerializeField] bool boolApplyCameraShake;
+
+    AudioPlayer audioPlayer;
+    ScoreKeeper scoreKeeper;
+    LevelManager levelManager;
+
+    private void Awake()
     {
-        rb = GetComponent<Rigidbody2D>();
+        cameraShake = Camera.main.GetComponent<Camerashake>();
+        audioPlayer = FindObjectOfType<AudioPlayer>();
+        scoreKeeper = FindObjectOfType<ScoreKeeper>();
+        levelManager = FindObjectOfType<LevelManager>();
     }
 
-    void Update()
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        float moveX = Input.GetAxis("Horizontal");
-        rb.velocity = new Vector2(moveX * speed, rb.velocity.y);
-    }
-}
-    </code></pre>
-  </section>
+        DamageDealer damageDealer = other.GetComponent<DamageDealer>();
 
-  <section class="code-block">
-    <h2>EnemyAI.cs</h2>
-    <p class="code-desc">
-      Makes an enemy follow the player using simple vector math. The enemy constantly
-      moves toward the player’s position at a fixed speed.
-    </p>
-    <pre><code class="language-cs">
-using UnityEngine;
-
-public class EnemyAI : MonoBehaviour
-{
-    public Transform player;
-    public float chaseSpeed = 2f;
-
-    void Update()
-    {
-        if (player != null)
+        if (damageDealer != null)
         {
-            transform.position = Vector2.MoveTowards(
-                transform.position,
-                player.position,
-                chaseSpeed * Time.deltaTime
-            );
+            TakeDamage(damageDealer.GetDamage());
+            PlayHitEffect();
+            ShakeCamera();
         }
+    }
+
+    void TakeDamage(int intTakeDamage)
+    {
+        intHealth -= intTakeDamage;
+        audioPlayer.PlayTakeDamageClip();
+
+        if (intHealth <= 0)
+        {
+            Die();
+        }
+    }
+
+    void PlayHitEffect()
+    {
+        if (hitEffect != null)
+        {
+            ParticleSystem instance = Instantiate(hitEffect, transform.position, Quaternion.identity);
+            Destroy(instance.gameObject, instance.main.duration + instance.main.startLifetime.constantMax);
+        }
+    }
+
+    void ShakeCamera()
+    {
+        if (cameraShake != null && boolApplyCameraShake)
+        {
+            cameraShake.Play();
+        }
+    }
+
+    public int PlayerHealth()
+    {
+        return intHealth;
+    }
+
+    void Die()
+    {
+        if (!boolIsPlayer)
+        {
+            scoreKeeper.UpdateScore(5);
+            Debug.Log(scoreKeeper.GetScore());
+        }
+        else
+        {
+            levelManager.LoadGameOver();
+        }
+        Destroy(gameObject);
     }
 }
     </code></pre>
