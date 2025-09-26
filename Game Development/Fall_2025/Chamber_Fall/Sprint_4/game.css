@@ -1,0 +1,87 @@
+/* ===== Shared Header & Nav Styling ===== */
+header {
+  background: #0077cc;
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+header h1 {
+  margin-bottom: 10px;
+}
+
+nav {
+  margin-top: 10px;
+}
+
+nav a {
+  margin: 0 10px;
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+nav a:hover {
+  text-decoration: underline;
+}
+
+/* ===== Layout for game pages ===== */
+.game-layout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 20px;
+}
+
+/* Unity WebGL game container */
+.game-container {
+  flex: 3;
+  min-width: 300px;
+}
+.unity-frame {
+  width: 100%;
+  height: 650px; /* increased from 600px */
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  background: #000;
+}
+
+
+/* Game info sidebar */
+.game-info {
+  flex: 1;
+  min-width: 250px;
+  background: #e6e6e6; /* darker shade than before */
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.game-info h2,
+.game-info h3 {
+  margin-top: 15px;
+  margin-bottom: 5px;
+  color: #0077cc;
+}
+
+/* Add divider lines between sections */
+.game-info section {
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #999; /* thicker and darker */
+}
+
+.game-info section:last-child {
+  border-bottom: none;
+}
+
+
+.game-info a {
+  color: #0077cc;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.game-info a:hover {
+  text-decoration: underline;
+}
