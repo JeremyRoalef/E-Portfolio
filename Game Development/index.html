@@ -24,10 +24,11 @@
 
   <main>
     <!-- Fall 2023 Semester -->
-    <section class="accordion">
-      <button class="accordion-header">Fall 2023</button>
-      <div class="accordion-content">
-        
+<section class="accordion">
+  <button class="accordion-header">Fall 2023</button>
+  <div class="accordion-content">
+    <div class="accordion-body">
+      <!-- lots of content here (project cards, nested accordions, images, PDFs, etc.) -->
 		<!--Fall 2023 Video Games-->
 		
 		<!--Delivery Driver-->
@@ -99,16 +100,19 @@
           <p><strong>Tech:</strong> Unity, C#</p>
           <p><strong>Course:</strong> CITA 212: Fundamentals of Game Design at SUNY Morrisville</p>
   		  <p><strong>Instructor: </strong>Professor Marcoux</p>
-        </div>
-		
-      </div>
-    </section>
-	
+        </div>	  
+    </div>
+  </div>
+</section>
+
+
 	<!--Fall 2024 Semester-->
-	<section class="accordion">
-	<button class="accordion-header">Fall 2024</button>
-	<div class="accordion-content">
-        
+<section class="accordion">
+  <button class="accordion-header">Fall 2024</button>
+  <div class="accordion-content">
+    <div class="accordion-body">
+      <!-- lots of content here (project cards, nested accordions, images, PDFs, etc.) -->
+	  
 		<!--Fall 2024 Video Games-->
 		
 		<!--Obstacle Course-->
@@ -165,17 +169,24 @@
           <p><strong>Tech:</strong> Unity, C#</p>
           <p><strong>Course:</strong> CITA 312: Intermediate Game Design</p>
   		  <p><strong>Instructor: </strong>Professor Awedat</p>
-        </div>
-		
-      </div>
-    </section>
+        </div>	  
+	  
+    </div>
+  </div>
+</section>
+
+        
+
 	
     <!-- Add more semesters below -->
 	<!--Fall 2025 Semester-->
-	<section class="accordion">
-	<button class="accordion-header">Fall 2025</button>
-	<div class="accordion-content">
-        
+<section class="accordion">
+  <button class="accordion-header">Fall 2025</button>
+  <div class="accordion-content">
+    <div class="accordion-body">
+      <!-- lots of content here (project cards, nested accordions, images, PDFs, etc.) -->
+	  
+	  
 		<!--Fall 2025 Projects-->
 		
 		<!--Chamber Fall - Agile Development Lifecycle-->
@@ -229,7 +240,7 @@
 				<p>The image below depicts the result of my map generation system. The yellow lines represent placeholder hallway connectors 
 				to the chambers, the grey boxes represent the chambers, and the blue box is a placeholder for the boss chamber</p>
 				
-				<img src = "Images/Chamber_Fall_Map.png", width = 800, height = 600></img>
+				<img src = "Images/Chamber_Fall_Map.png" class = "project-media"></img>
 				
 				
 				<p>Making the procedural generation taught me a valuable lesson in code optimization. When I first ran my scripts, it took a combined 11
@@ -249,6 +260,17 @@
 				<ul><a href = "Sprint_1_Code_Snippets/Edge_Snippet.html">Edge.cs</a></ul>
 				<ul><a href = "Sprint_1_Code_Snippets/Grid_Object_Snippet.html">GridObject.cs</a></ul>
 				<ul><a href = "Sprint_1_Code_Snippets/Grid_System_Snippet.html">GridSystem.cs</a></ul>
+				
+				<section class="pdf-viewer">
+				  <h3>Documentation</h3>
+				  <button class="fullscreen-btn">🔎 Fullscreen</button>
+				  <iframe src="Sprint_1_Documentation.pdf"
+						  width="100%" height="600px"
+						  style="border: 1px solid #ccc; border-radius: 4px;"
+						  class="pdf-frame">
+				  </iframe>
+				  </section>
+
 				
 			  </div>
 			</div>
@@ -284,35 +306,81 @@
 				<p>Details about Sprint 5 coming soon...</p>
 			  </div>
 			</div>
-        </div>		
-      </div>
-    </section>
-	
-	
+        </div>		  
+	  
+    </div>
+  </div>
+</section>	
   </main>
+  
 <script>
 document.querySelectorAll('.accordion-header').forEach(button => {
   button.addEventListener('click', () => {
-    const content = button.nextElementSibling;
+    const content = button.nextElementSibling; // .accordion-content
 
-    if (content.style.maxHeight) {
-      // Collapse
-      content.style.maxHeight = null;
-    } else {
-      // Expand
-      content.style.maxHeight = content.scrollHeight + "px";
+    // If currently expanded (we used 'none' as the "fully open" marker)
+    const isExpandedInline = content.style.maxHeight && content.style.maxHeight !== '0px' && content.style.maxHeight !== 'none';
 
-      // After transition, switch to height auto so nested accordions can expand
-      content.addEventListener(
-        'transitionend',
-        function handler() {
-          content.style.maxHeight = 'none'; // allow dynamic growth
-          content.removeEventListener('transitionend', handler);
+    if (isExpandedInline || (content.style.maxHeight === 'none')) {
+      // Collapse: animate from current height -> 0
+      // If maxHeight is 'none' we need to set a fixed start height first:
+      if (content.style.maxHeight === 'none') {
+        // set explicit height equal to current full height
+        content.style.maxHeight = content.scrollHeight + 'px';
+        // force reflow before changing to 0 so transition runs
+        requestAnimationFrame(() => {
+          content.style.transition = 'max-height 0.35s ease';
+          content.style.maxHeight = '0';
+        });
+      } else {
+        // normal collapse
+        content.style.transition = 'max-height 0.35s ease';
+        content.style.maxHeight = '0';
+      }
+
+      // optional: remove 'none' marker if present after collapse completes
+      const onCollapseEnd = function () {
+        // ensure it's fully collapsed, then remove inline maxHeight to fall back to CSS default
+        if (content.style.maxHeight === '0px') {
+          content.style.maxHeight = ''; 
         }
-      );
+        content.removeEventListener('transitionend', onCollapseEnd);
+      };
+      content.addEventListener('transitionend', onCollapseEnd);
+
+    } else {
+      // Expand: animate to scrollHeight then switch to 'none' so nested changes are allowed
+      content.style.transition = 'max-height 0.35s ease';
+      // set to required height to animate
+      content.style.maxHeight = content.scrollHeight + 'px';
+
+      // when animation ends, set maxHeight to 'none' so inner content can grow dynamically later
+      const onExpandEnd = function () {
+        content.style.maxHeight = 'none';
+        content.removeEventListener('transitionend', onExpandEnd);
+      };
+      content.addEventListener('transitionend', onExpandEnd);
     }
   });
 });
-  </script>
+</script>
+
+<script>
+document.querySelectorAll(".fullscreen-btn").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const iframe = btn.nextElementSibling; // assumes iframe is right after button
+    if (iframe.requestFullscreen) {
+      iframe.requestFullscreen();
+    } else if (iframe.webkitRequestFullscreen) { /* Safari */
+      iframe.webkitRequestFullscreen();
+    } else if (iframe.msRequestFullscreen) { /* IE11 */
+      iframe.msRequestFullscreen();
+    }
+  });
+});
+</script>
+
+
+
 </body>
 </html>

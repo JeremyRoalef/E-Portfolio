@@ -1,10 +1,18 @@
 /* Shared Styles */
 body {
+	  font-size: 20px;  /* was ~16px */
+  line-height: 1.2;
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
   background: #f4f4f9;
   color: #333;
+}
+
+p {
+	  font-size: 20px;  /* was ~16px */
+  line-height: 1.2;
+	
 }
 
 header {
@@ -29,11 +37,26 @@ nav a:hover {
   text-decoration: underline;
 }
 
+/* Headers */
+h1 {
+  font-size: 36px;  /* was ~32px */
+}
+
+h2 {
+  font-size: 28px;  /* was ~24px */
+}
+
+h3 {
+  font-size: 22px;  /* was ~18px */
+}
+
 main {
-  max-width: 900px;
+  max-width: 1200px;   /* give more space */
+  width: 90%;          /* responsive, adapts to screen size */
   margin: 20px auto;
   padding: 0 20px;
 }
+
 
 /* Accordion */
 .accordion {
@@ -58,13 +81,6 @@ main {
 
 .accordion-header:hover {
   background: #d6edff;
-}
-
-.accordion-content {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.3s ease;
-  padding: 0 15px;
 }
 
 /* Game Cards */
@@ -120,10 +136,32 @@ header {
 }
 
 header h1 {
+	 font-size: 36px;
   margin-bottom: 10px;
 }
+.pdf-viewer {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.fullscreen-btn {
+  background: #0077cc;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.fullscreen-btn:hover {
+  background: #005fa3;
+}
+
 
 nav a {
+	 font-size: 20px;
   margin: 0 10px;
   color: white;
   text-decoration: none;
@@ -134,20 +172,17 @@ nav a:hover {
   text-decoration: underline;
 }
 
-main {
-  max-width: 900px;
-  margin: 20px auto;
-  padding: 0 20px;
+
+/* container whose height we animate */
+.accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease;
+  padding: 0;              /* IMPORTANT: no vertical padding here */
+  box-sizing: border-box;
+  width: 100%;
 }
 
-/* Accordion */
-.accordion {
-  margin-bottom: 15px;
-  border-radius: 8px;
-  overflow: hidden;
-  background: white;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-}
 
 .accordion-header {
   width: 100%;
@@ -163,13 +198,6 @@ main {
 
 .accordion-header:hover {
   background: #d6edff;
-}
-
-.accordion-content {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.3s ease;
-  padding: 0 15px;
 }
 
 /* Game Cards */
@@ -200,16 +228,9 @@ main {
 }
 
 .project-card {
-  background: #fff;
-  padding: 15px;
-  border-radius: 6px;
-  margin-bottom: 15px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  width: 100%;            /* stretch across container */
-  max-width: 800px;       /* cap size if needed */
-  margin-left: auto;      /* center horizontally */
-  margin-right: auto;
+  margin: 10px 0; /* instead of 15px all around */
 }
+
 
 
 .project-card h3 {
@@ -230,23 +251,22 @@ main {
 .project-card a:hover {
   text-decoration: underline;
 }
-.accordion-content {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.3s ease;
-  padding: 0 15px;
-}
 
-.nested-accordion .accordion-content {
-  padding-left: 10px;
+
+.accordion-body {
+  padding: 5px 10px; /* thinner space */
 }
 
 
+/* if you used nested-accordion rules, update them to target the body */
+.nested-accordion .accordion-body {
+  padding-left: 20px;      /* or whatever indentation you prefer */
+}
 
 .project-media {
   width: 100%;
   max-height: 750px;  /* increased from 250px */
-  object-fit: cover;
+  object-fit: contain;
   border-radius: 4px;
   margin: 10px 0;
 }
