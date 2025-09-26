@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Code Showcase</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header>
+    <h1>Chamber Layout SO - Code Showcase</h1>
+    <nav>
+      <a href="../../index.html">🏠 Home</a>
+      <a href="../index.html">🎮 Back to Game Dev</a>
+      <a href="../../Artificial Intelligence/index.html">🤖 AI</a>
+      <a href="../../Coding/index.html">💻 Coding</a>
+      <a href="../../Databases/index.html">🗄️ Databases</a>
+    </nav>
+  </header>
+
+  <main>
+  <section class="code-block">
+    <h2>ChamberLayoutSO.cs</h2>
+    <p class="code-desc">
+This scriptable object acts as the middleman for all the data about chambers. It allows me to define the structure of the nodes for the chamber and the chamber prefab. It also stores useful
+methods for getting chamber properties. Without this scriptable object, I would have difficulties tying everything together.
+
+    </p>
+    <pre><code class="language-cs">
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+
+[CreateAssetMenu(fileName = "New Chamber Layout", menuName = "ScriptableObject/ChamberLayout")]
+public class ChamberLayoutSO : ScriptableObject
+{
+    [Tooltip("Reference the chamebr design documentation for the positions of each grid position and the hallway connectors")]
+    public ChamberNode[] chamberNodes;
+
+    public GameObject chamberPrefab;
+
+    /// <summary>
+    /// returns the index of the highest grid position (including hallway connectors)
+    /// </summary>
+    /// <returns></returns>
+    public int GetHeightOfChamber()
+    {
+        int highestIndex = 0;
+
+        for (int i = 0; i < chamberNodes.Length; i++)
+        {
+            ChamberNode currentChamberNode = chamberNodes[i];
+
+            int heightIndexOfChamber = currentChamberNode.relativeChamberNodeGridPosition.z;
+            //Get the tallest height based on hallway connectors, if applicable
+            for ( int j = 0; j < currentChamberNode.hallwayConnectorPositions.Length; j++)
+            {
+                int heightIndexOfHallwayConnector = currentChamberNode.hallwayConnectorPositions[j].z;
+                if (heightIndexOfChamber + heightIndexOfHallwayConnector > heightIndexOfChamber)
+                {
+                    heightIndexOfChamber += heightIndexOfHallwayConnector;
+                }
+            }
+
+            //Test if height of current chamber node is higher than the current highest indes
+            if (heightIndexOfChamber > highestIndex)
+            {
+                highestIndex = heightIndexOfChamber;
+            }
+        }
+
+        return highestIndex + 1;
+    }
+    public int GetLengthOfChamber()
+    {
+        int rightMostIndex = 0;
+
+        for (int i = 0; i < chamberNodes.Length; i++)
+        {
+            ChamberNode currentChamberNode = chamberNodes[i];
+
+            int rightMostIndexOfChamber = currentChamberNode.relativeChamberNodeGridPosition.x;
+            //Get the tallest height based on hallway connectors, if applicable
+            for (int j = 0; j < currentChamberNode.hallwayConnectorPositions.Length; j++)
+            {
+                int rightMostIndexOfHallwayConnector = currentChamberNode.hallwayConnectorPositions[j].x;
+                if (rightMostIndexOfChamber + rightMostIndexOfHallwayConnector > rightMostIndexOfChamber)
+                {
+                    rightMostIndexOfChamber += rightMostIndexOfHallwayConnector;
+                }
+            }
+
+            //Test if height of current chamber node is higher than the current highest indes
+            if (rightMostIndexOfChamber > rightMostIndex)
+            {
+                rightMostIndex = rightMostIndexOfChamber;
+            }
+        }
+
+        return rightMostIndex + 1;
+    }
+    public List<GridPosition> GetChamberLayoutGridPositions()
+    {
+        List<GridPosition> gridPositions = new List<GridPosition>();
+
+        foreach (ChamberNode chamberNode in chamberNodes)
+        {
+            gridPositions.Add(chamberNode.relativeChamberNodeGridPosition);
+        }
+
+        return gridPositions;
+    }
+    public Dictionary<GridPosition, GridPosition> GetAbsoluteHallwayConnectorPositions(GridPosition originGridPosition)
+    {
+        Dictionary<GridPosition, GridPosition> hallwayConnectors = new Dictionary<GridPosition, GridPosition>();
+
+        foreach (ChamberNode chamberNode in chamberNodes)
+        {
+            //Conditions where there is no hallway connector positions
+            if (chamberNode.hallwayConnectorPositions == null)
+            {
+                continue;
+            }
+            if (chamberNode.hallwayConnectorPositions.Length == 0)
+            {
+                continue;
+            }
+
+            //Get the absolute position for the current node
+            GridPosition absoluteChamberNodePosition = chamberNode.relativeChamberNodeGridPosition + originGridPosition;
+
+            foreach (GridPosition relativeHallwayConnectorPosition in chamberNode.hallwayConnectorPositions)
+            {
+                //Get the absolute position of the hallway connector position
+                GridPosition absoluteHallwayConnectorPosition = absoluteChamberNodePosition + relativeHallwayConnectorPosition;
+                //Store the position in the dicitonary
+                hallwayConnectors[absoluteHallwayConnectorPosition] = absoluteChamberNodePosition;
+            }
+        }
+
+        return hallwayConnectors;
+    }
+
+    public GridPosition GetSpawnPosition()
+    {
+        //Get the chamber now that is a spawn position
+        foreach (ChamberNode chamberNode in chamberNodes)
+        {
+            if (chamberNode.isPlayerSpawnPosition) { return chamberNode.relativeChamberNodeGridPosition; }
+        }
+
+        return GridPosition.Invalid;
+    }
+}
+    </code></pre>
+  </section>
+</main>
+
+
+</body>
+</html>

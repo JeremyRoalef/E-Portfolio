@@ -171,23 +171,148 @@
     </section>
 	
     <!-- Add more semesters below -->
-	
+	<!--Fall 2025 Semester-->
+	<section class="accordion">
+	<button class="accordion-header">Fall 2025</button>
+	<div class="accordion-content">
+        
+		<!--Fall 2025 Projects-->
+		
+		<!--Chamber Fall - Agile Development Lifecycle-->
+        <div class="project-card">
+          <h3>Chamber Fall - Agile Development Lifecycle</h3>
+          <img src="No Image yet :/" alt="Image of Video Game" class="project-media" />
+          <p>A detailed breakdown of the development of my group's game, Chamber Fall. 
+			<br><br> Chamber Fall is a roguelike first-person shooter where players choose from three distinct characters, each with unique 
+			weapons and abilities, and battle through randomized chambers of enemies, augments, and bosses to survive as far as possible.
+			
+			<br><br>In this project, Michael, Aiden, and I set out to discover how to follow the Agile Development lifecycle to develop Chamber Fall.
+			We must determine our product backlog, sprints, and contingency plans for unforeseen errors. We must learn how to handle GitHub branches,
+			resolve merging conflicts, and learn how to play into each other's strengths.
+			
+			<br><br>Our project will be broken up into five parts, one part for each sprint.
+
+	      </p>
+          <p><a href="https://github.com/MJR-Michael/CITA-412-Advanced-Game-Design-Group-Project">💻 GitHub</a>
+          <p><strong>Team:</strong>
+			<ul><strong>Jeremy Roalef:</strong> Game Programmer, Systems Designer</ul>
+			<ul><strong>Michael Roberts:</strong> Game Programmer, Enemy Programming & Design</ul>
+			<ul><strong>Aiden Longueville:</strong> Assets Design</ul>
+		  </p>
+          <p><strong>Tech:</strong> Unity, C#, Jira, GitHub</p>
+          <p><strong>Course:</strong> CITA 412: Advanced Game Design & Application</p>
+  		  <p><strong>Instructor:</strong> Professor Awedat</p>
+		  
+		  <br>
+					  
+			<!-- Sprint 1-->
+			<div class="accordion nested-accordion">
+			  <button class="accordion-header">Sprint 1</button>
+			  <div class="accordion-content">
+				<p>Sprint 1 was critical to our game's setup. We needed a first-person shooter template ready, sample assets, enemies to interact with,
+				and a chamber design system that we may implement into the actual game. I will mainly discuss my role in this sprint: setting up the first-person template
+				and the procedurally generated chamber design system.</p>
+
+				
+				<strong>First-Person Shooter Template</strong>
+				<p>Since our game was set up in Unity, we had quick access to a free FPS template from which we could quickly work. I installed the template
+				from Unity's asset store and got to work. The first thing I needed to do was configure the input system. I created an
+				<a href = "Sprint_1_Code_Snippets/Input_Manager_Snippet.html"> Input Manager script</a> that my team could easily use to gather player input for our game.</p>
+				<p>After setting up the input manager, I customized the player prefab that came with the FPS template. My changes were minimal,
+				but the main thing was altering how the input was collected using my new input manager.</p>
+
+				
+				<br><strong>Procedurally Generated Chamber Design System</strong>
+				<p>Making the chamber system was one of the most thought-provoking programming exercises I accomplished. I learned how to utilize custom
+				structs for grid positions, scriptable objects for chamber data, Breadth-First search / A* pathfinding algorithms to connect chambers,
+				and Prim's algorithm to develop a minimum-spanning tree, all within two weeks.</p> 
+				<p>The image below depicts the result of my map generation system. The yellow lines represent placeholder hallway connectors 
+				to the chambers, the grey boxes represent the chambers, and the blue box is a placeholder for the boss chamber</p>
+				
+				<img src = "Images/Chamber_Fall_Map.png", width = 800, height = 600></img>
+				
+				
+				<p>Making the procedural generation taught me a valuable lesson in code optimization. When I first ran my scripts, it took a combined 11
+				minutes to run. It was the first time I saw the true inefficiencies of my code. Trying to figure out what exactly caused the poor
+				performance was a challenging endeavor. In the end, I learned how to debug code efficiently and how to utilize large language models to
+				help point me in the right direction for code inefficiencies.</p>
+				
+				<p>If you have the time, feel free to look through the scripts I wrote to make a procedurally generated map system below:</p>
+
+				
+				<ul><a href = "Sprint_1_Code_Snippets/RNG_Seed_Manager_Snippet.html">RNGSeedManager.cs</a></ul>
+				<ul><a href = "Sprint_1_Code_Snippets/Grid_Position_Snippet.html">GridPosition.cs</a></ul>
+				<ul><a href = "Sprint_1_Code_Snippets/Chamber_Node_Snippet.html">ChamberNode.cs</a></ul>
+				<ul><a href = "Sprint_1_Code_Snippets/Chamber_Layout_SO_Snippet.html">ChamberLayoutSO.cs</a></ul>
+				<ul><a href = "Sprint_1_Code_Snippets/Min_Priority_Queue_Snippet.html">MinPriorityQueue.cs</a></ul>
+				<ul><a href = "Sprint_1_Code_Snippets/Chamber_Snippet.html">Chamber.cs</a></ul>
+				<ul><a href = "Sprint_1_Code_Snippets/Edge_Snippet.html">Edge.cs</a></ul>
+				<ul><a href = "Sprint_1_Code_Snippets/Grid_Object_Snippet.html">GridObject.cs</a></ul>
+				<ul><a href = "Sprint_1_Code_Snippets/Grid_System_Snippet.html">GridSystem.cs</a></ul>
+				
+			  </div>
+			</div>
+			
+			<!--Sprint 2-->
+			<div class="accordion nested-accordion">
+			  <button class="accordion-header">Sprint 2</button>
+			  <div class="accordion-content">
+				<p>Details about Sprint 2 coming soon...</p>
+			  </div>
+			</div>
+			
+			<!--Sprint 3-->
+			<div class="accordion nested-accordion">
+			  <button class="accordion-header">Sprint 3</button>
+			  <div class="accordion-content">
+				<p>Details about Sprint 3 coming soon...</p>
+			  </div>
+			</div>
+			
+			<!--Sprint 4-->
+			<div class="accordion nested-accordion">
+			  <button class="accordion-header">Sprint 4</button>
+			  <div class="accordion-content">
+				<p>Details about Sprint 4 coming soon...</p>
+			  </div>
+			</div>
+			
+			<!--Sprint 5-->
+			<div class="accordion nested-accordion">
+			  <button class="accordion-header">Sprint 5</button>
+			  <div class="accordion-content">
+				<p>Details about Sprint 5 coming soon...</p>
+			  </div>
+			</div>
+        </div>		
+      </div>
+    </section>
 	
 	
   </main>
+<script>
+document.querySelectorAll('.accordion-header').forEach(button => {
+  button.addEventListener('click', () => {
+    const content = button.nextElementSibling;
 
+    if (content.style.maxHeight) {
+      // Collapse
+      content.style.maxHeight = null;
+    } else {
+      // Expand
+      content.style.maxHeight = content.scrollHeight + "px";
 
-
-
-
-  <script>
-  document.querySelectorAll('.accordion-header').forEach(button => {
-    button.addEventListener('click', () => {
-      const content = button.nextElementSibling;
-      content.style.maxHeight = content.style.maxHeight ? null : content.scrollHeight + 'px';
-    });
+      // After transition, switch to height auto so nested accordions can expand
+      content.addEventListener(
+        'transitionend',
+        function handler() {
+          content.style.maxHeight = 'none'; // allow dynamic growth
+          content.removeEventListener('transitionend', handler);
+        }
+      );
+    }
   });
+});
   </script>
-
 </body>
 </html>

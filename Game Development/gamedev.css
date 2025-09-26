@@ -230,6 +230,18 @@ main {
 .project-card a:hover {
   text-decoration: underline;
 }
+.accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  padding: 0 15px;
+}
+
+.nested-accordion .accordion-content {
+  padding-left: 10px;
+}
+
+
 
 .project-media {
   width: 100%;

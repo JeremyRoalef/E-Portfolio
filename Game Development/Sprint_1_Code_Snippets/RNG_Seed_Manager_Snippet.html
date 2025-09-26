@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Code Showcase</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header>
+    <h1>RNG Seed Manager - Code Showcase</h1>
+    <nav>
+      <a href="../../index.html">🏠 Home</a>
+      <a href="../index.html">🎮 Back to Game Dev</a>
+      <a href="../../Artificial Intelligence/index.html">🤖 AI</a>
+      <a href="../../Coding/index.html">💻 Coding</a>
+      <a href="../../Databases/index.html">🗄️ Databases</a>
+    </nav>
+  </header>
+
+  <main>
+  <section class="code-block">
+    <h2>RNGSeedManager.cs</h2>
+    <p class="code-desc">
+This script handles the randomness of our game. This script stores a singleton object that holds the game seed. Before playing the game, the seed overrides Unity's built-in RNG properties
+and uses the given seed for RNG instead. This is desired for players who want to share their runs within our game. It also helps with debugging the map system.
+
+    </p>
+    <pre><code class="language-cs">
+using UnityEngine;
+
+public class RNGSeedManager : MonoBehaviour
+{
+    [SerializeField]
+    int gameSeed = 1041234;
+
+    public static RNGSeedManager Instance;
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+
+        UnityEngine.Random.InitState(gameSeed);
+    }
+
+    public void SetGameSeed(int newGameSeed)
+    {
+        gameSeed = newGameSeed;
+        UnityEngine.Random.InitState(gameSeed);
+    }
+
+    public void SetGameSeedRandom()
+    {
+        gameSeed = Random.Range(0, int.MaxValue);
+        UnityEngine.Random.InitState(gameSeed);
+    }
+}
+    </code></pre>
+  </section>
+    </code></pre>
+  </section>
+</main>
+
+
+</body>
+</html>

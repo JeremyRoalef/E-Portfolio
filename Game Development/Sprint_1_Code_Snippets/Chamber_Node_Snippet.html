@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Code Showcase</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header>
+    <h1>Chamber Node - Code Showcase</h1>
+    <nav>
+      <a href="../../index.html">🏠 Home</a>
+      <a href="../index.html">🎮 Back to Game Dev</a>
+      <a href="../../Artificial Intelligence/index.html">🤖 AI</a>
+      <a href="../../Coding/index.html">💻 Coding</a>
+      <a href="../../Databases/index.html">🗄️ Databases</a>
+    </nav>
+  </header>
+
+  <main>
+  <section class="code-block">
+    <h2>ChamberNode.cs</h2>
+    <p class="code-desc">
+This class helps define the layout structure of the chambers. Each chamber node has a relative chamber node position, which refers to the node's position relative to the origin node in the chamber.
+Basically, I am representing the length and width of my chambers through the chamber nodes.
+    </p>
+    <pre><code class="language-cs">
+using UnityEngine;
+
+[System.Serializable]
+public class ChamberNode
+{
+    [Tooltip("Reference the chamber design documentation for the grid position of the current node")]
+    public GridPosition relativeChamberNodeGridPosition;
+    [Tooltip("The relative position of the hallway connector from the chamebr grid position.\n\n" +
+        "For example, if chamebr grid position is (1,0), and the hallway connector is (1,-1), enter (0,-1).\n\n" +
+        "Hallway connector is 1 unit below the grid position")]
+    public GridPosition[] hallwayConnectorPositions;
+    public bool isPlayerSpawnPosition;
+}
+    </code></pre>
+  </section>
+</main>
+
+
+</body>
+</html>

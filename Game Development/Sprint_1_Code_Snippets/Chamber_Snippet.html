@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Code Showcase</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header>
+    <h1>Chamber - Code Showcase</h1>
+    <nav>
+      <a href="../../index.html">🏠 Home</a>
+      <a href="../index.html">🎮 Back to Game Dev</a>
+      <a href="../../Artificial Intelligence/index.html">🤖 AI</a>
+      <a href="../../Coding/index.html">💻 Coding</a>
+      <a href="../../Databases/index.html">🗄️ Databases</a>
+    </nav>
+  </header>
+
+  <main>
+  <section class="code-block">
+    <h2>Chamber.cs</h2>
+    <p class="code-desc">
+This class acts as the object representation of my chambers. You may notice there is a lot of data representation happening in many of my scripts; ChamberNode defines the length and width
+of my chambers, ChamberLayoutSO acts as a middleman from my assets to code, and now this Chamber class. This is because of all the different ways my data must connect.
+I found that breaking up the data this way was the most intuitive way possible.<br><br>
+
+Anyway, let's go on to what this script does. This script stores the positions the chamber takes up, the positions leading to the hallways, some important flags, and many methods to get, set, and
+ interpret the chamber's data. This class comes in handy when designing my algorithm for pathfinding and mapping trees. Eventually, the goal is to store this chamber data into a
+ monobehavior game object so my peers and I may use the chamber's properties to handle gameplay logic. That is for future sprints, though. For now, we will focus on the map system.
+
+    </p>
+    <pre><code class="language-cs">
+using System;
+using System.Collections.Generic;
+
+public class Chamber
+{
+    List<Chamber> connectedTo;
+    GridPosition originGridPosition;
+    ChamberLayoutSO chamberLayoutSO;
+
+    /// <summary>
+    /// Key = hallway connector to the chamber (absolute position). Value = the chamber that connects to a hallway (absolute position)
+    /// </summary>
+    Dictionary<GridPosition, GridPosition> _originalHallwayConnectors;
+
+    /// <summary>
+    /// Key = hallway connector to the chamber (absolute position). Value = the chamber that connects to a hallway (absolute position)
+    /// </summary>
+    Dictionary<GridPosition, GridPosition> hallwayConnectors;
+
+    bool isBossChamber;
+    bool isVisited;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="originGridPosition">absolute position of chamber's origin</param>
+    /// <param name="hallwayConnectors">Key = hallway connector to the chamber (absolute position). Value = the chamber that connects to a hallway (absolute position)</param>
+    /// <param name="isBossChamber"></param>
+    public Chamber(GridPosition originGridPosition, ChamberLayoutSO chamberLayoutSO, Dictionary<GridPosition, GridPosition> hallwayConnectors, bool isBossChamber)
+    {
+        this.hallwayConnectors = new Dictionary<GridPosition, GridPosition>(hallwayConnectors);
+        _originalHallwayConnectors = new Dictionary<GridPosition, GridPosition>(hallwayConnectors);
+        connectedTo = new List<Chamber>();
+
+        this.originGridPosition = originGridPosition;
+        this.isBossChamber = isBossChamber;
+        this.chamberLayoutSO = chamberLayoutSO;
+        isVisited = false;
+    }
+    public GridPosition GetPositionOfChamberConnectorFromHallwayPosition(GridPosition hallwayConnectorPosition)
+    {
+        if (_originalHallwayConnectors.ContainsKey(hallwayConnectorPosition))
+        {
+            return _originalHallwayConnectors[hallwayConnectorPosition];
+        }
+
+        return GridPosition.Invalid;
+    }
+    public bool UseHallwayConnector(GridPosition connectorGridPosition)
+    {
+        return hallwayConnectors.Remove(connectorGridPosition);
+    }
+    public void AddConnection(Chamber otherChamber) => connectedTo.Add(otherChamber);
+    public bool IsBossChamber() => isBossChamber;
+    public bool IsConnectedTo(Chamber givenChamber) => connectedTo.Contains(givenChamber);
+    /// <summary>
+    /// Key = hallway connector to the chamber (absolute position). Value = the chamber that connects to a hallway (absolute position)
+    /// </summary>
+    public Dictionary<GridPosition, GridPosition> HallwayConnectors() => hallwayConnectors;
+    public bool IsVisited() => isVisited;
+    public void SetIsVisited(bool isVisited) => this.isVisited = isVisited;
+
+    public bool ContainsHallwayConnector(GridPosition gridPosition)
+    {
+        return hallwayConnectors.ContainsKey(gridPosition);
+    }
+
+    public GridPosition GetPlayerSpawnPosition()
+    {
+        //Get the spawn position from the prefab
+        return chamberLayoutSO.GetSpawnPosition() + originGridPosition;
+    }
+
+    public object GetChamberLayoutSO() => chamberLayoutSO;
+}
+    </code></pre>
+  </section>
+</main>
+</body>
+</html>
