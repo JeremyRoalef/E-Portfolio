@@ -21,58 +21,39 @@
 
   <main>
   <section class="code-block">
-    <h2>PlayerController.cs</h2>
+    <h2>QuestionSO.cs</h2>
     <p class="code-desc">
-      Handles player movement input and applies velocity to the character’s Rigidbody2D.
-      This script lets the player move left and right using the arrow keys or A/D keys.
+This is my first-ever scriptable object script. It stores information about a question, including the initial prompt and 4 options for answers. I would come to understand the power of utilizing scriptable objects when it comes to storing large sums of similar data. I could make questions for my
+quiz game quickly using this.
     </p>
     <pre><code class="language-cs">
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+[CreateAssetMenu(menuName ="Quiz Question", fileName ="New Question")]
+public class QuestionSO : ScriptableObject
 {
-    public float speed = 5f;
-    private Rigidbody2D rb;
+    [TextArea(2,6)]
+    [SerializeField] string strQuestion = "Enter new question text here";
+    [SerializeField] string[] strAnswers = new string[4];
+    [SerializeField] int intCorrectAnswerIndex;
 
-    void Start()
+    public string GetQuestion()
     {
-        rb = GetComponent<Rigidbody2D>();
+        return strQuestion;
     }
 
-    void Update()
+    public int GetCorrectAnswerIndex()
     {
-        float moveX = Input.GetAxis("Horizontal");
-        rb.velocity = new Vector2(moveX * speed, rb.velocity.y);
+        return intCorrectAnswerIndex;
     }
-}
-    </code></pre>
-  </section>
-
-  <section class="code-block">
-    <h2>EnemyAI.cs</h2>
-    <p class="code-desc">
-      Makes an enemy follow the player using simple vector math. The enemy constantly
-      moves toward the player’s position at a fixed speed.
-    </p>
-    <pre><code class="language-cs">
-using UnityEngine;
-
-public class EnemyAI : MonoBehaviour
-{
-    public Transform player;
-    public float chaseSpeed = 2f;
-
-    void Update()
+    
+    public string GetAnswer(int index)
     {
-        if (player != null)
-        {
-            transform.position = Vector2.MoveTowards(
-                transform.position,
-                player.position,
-                chaseSpeed * Time.deltaTime
-            );
-        }
+        return strAnswers[index];
     }
+
 }
     </code></pre>
   </section>
