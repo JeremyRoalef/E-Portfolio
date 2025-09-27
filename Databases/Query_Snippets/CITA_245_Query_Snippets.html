@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Code Showcase</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header>
+    <h1>CITA 245 - Query Showcase</h1>
+    <nav>
+      <a href="../../index.html">🏠 Home</a>
+      <a href="../index.html">🎮 Back to Game Dev</a>
+      <a href="../../Artificial Intelligence/index.html">🤖 AI</a>
+      <a href="../../Coding/index.html">💻 Coding</a>
+      <a href="../../Databases/index.html">🗄️ Databases</a>
+	  <a href="../../3D_Modeling/index.html">🟠 Blender </a>
+    </nav>
+  </header>
+
+  <main>
+ 
+ <section class="accordion">
+  <button class="accordion-header">CREATE TABLE Queries</button>
+  <div class="accordion-content">
+    <div class="accordion-body">
+		<!--Fall 2023 Video Games-->
+
+<section class="code-block">
+  <h2>Database Schema Setup</h2>
+  <p class="code-desc">
+    These are the CREATE TABLE queries used to build the schema.
+  </p>
+
+  <pre><code class="sql">
+<!--My query here-->
+CREATE TABLE building(	
+	bid INT NOT NULL,  
+	bname VARCHAR(24) NOT NULL,   
+	PRIMARY KEY (bid)
+	);    
+
+CREATE TABLE classroom(
+	roomno INT NOT NULL,  
+	bid INT NOT NULL,  
+	FOREIGN KEY (bid) REFERENCES building(bid),
+	PRIMARY KEY (roomno, bid) 
+);  
+ 
+CREATE TABLE department(	
+	did INT NOT NULL,  
+	dname VARCHAR(24) NOT NULL,  
+	PRIMARY KEY (did) 
+);  
+  
+
+CREATE TABLE major(
+	mid INT NOT NULL,  
+	did INT NOT NULL,  
+	mname VARCHAR(24) NOT NULL,  
+	FOREIGN KEY (did) REFERENCES department(did), 
+	PRIMARY KEY (mid) 
+);  
+
+CREATE TABLE course(
+	ccode INT NOT NULL,  
+	ctitle VARCHAR(24) NOT NULL,  
+	cdesc VARCHAR(24) NOT NULL,  
+	ccredits NUMERIC(1,0) NOT NULL,  
+	did INT NOT NULL,	  
+	FOREIGN KEY (did) REFERENCES department(did), 
+	PRIMARY KEY (ccode)
+);   
+
+CREATE TABLE requirement(	
+	ccode INT NOT NULL,  
+	mid INT NOT NULL,	  
+	FOREIGN KEY (ccode) REFERENCES course(ccode), 
+	FOREIGN KEY (mid) REFERENCES major(mid), 
+	PRIMARY KEY (ccode, mid) 
+);   
+
+CREATE TABLE student(
+	stid INT NOT NULL,  
+	stfirstname VARCHAR(24) NOT NULL, 
+	stlastname VARCHAR(24) NOT NULL,  
+	stemail VARCHAR(24) NOT NULL,  
+	stdob DATE NOT NULL,  
+	mid INT NOT NULL,  
+	FOREIGN KEY (mid) REFERENCES major(mid),	  
+	PRIMARY KEY (stid) 
+);   
+
+CREATE TABLE falculty(	
+	fid INT NOT NULL,  
+	ffirstname VARCHAR(24) NOT NULL,  
+	flastname VARCHAR(24) NOT NULL,  
+	frank VARCHAR(24) NOT NULL,  
+	did INT NOT NULL,  
+	FOREIGN KEY (did) REFERENCES department(did),  
+	PRIMARY KEY (fid)
+);    
+
+CREATE TABLE section(
+	csid INT NOT NULL,  
+	cssemester VARCHAR(24) NOT NULL,  
+	csyear INT NOT NULL,  
+	roomno INT NOT NULL,  
+	bid INT NOT NULL,  
+	ccode INT NOT NULL,  
+	fid INT NOT NULL,  
+	FOREIGN KEY (roomno, bid) REFERENCES classroom(roomno, bid),  
+	FOREIGN KEY (ccode) REFERENCES course(ccode),  
+	FOREIGN KEY (fid) REFERENCES falculty(fid),  
+	PRIMARY KEY (csid, cssemester, csyear, ccode) 
+);  
+
+CREATE TABLE enrollment(
+	edate DATE NOT NULL,   
+	egrade INT NOT NULL,   
+	stid INT NOT NULL,   
+	csid INT NOT NULL,  
+	ccode INT NOT NULL,   
+	cssemester VARCHAR(24) NOT NULL,   
+	csyear INT NOT NULL,   
+	FOREIGN KEY (stid) REFERENCES student(stid), 
+	FOREIGN KEY (csid, cssemester, csyear, ccode) REFERENCES section(csid, cssemester, csyear, ccode),   
+	PRIMARY KEY (stid, csid, cssemester, csyear, ccode) 
+); 
+  </code></pre>
+</section>
+	
+  		
+  
+		
+    </div>
+  </div>
+</section>
+  
+<section class="accordion">
+  <button class="accordion-header">INSERT INTO Queries</button>
+  <div class="accordion-content">
+    <div class="accordion-body">
+		<!--Fall 2023 Video Games-->
+
+<section class="code-block">
+  <h2>Database Schema Setup</h2>
+  <p class="code-desc">
+    These are the CREATE TABLE queries used to build the schema.
+  </p>
+
+  <pre><code class="sql">
+<!--My query here-->
+INSERT INTO student VALUES (
+	1,
+	'Jimmy',
+	'Mas',
+	'JiminiXmas@JMT.com',
+	'2004/04/04',
+	1
+)
+INSERT INTO student VALUES (
+	2,
+	'Stacey',
+	'Macey',
+	'StaceyM4cey@JMT.com',
+	'2003/01/02',
+	4
+)
+INSERT INTO student VALUES (
+	3,
+	'Manny',
+	'Smith',
+	'MSmith@JMT.com',
+	'1812/12/12',
+	2
+)
+INSERT INTO student VALUES (
+	4,
+	'John',
+	'Dover',
+	'JoeDoe@JMT.com',
+	'2001/11/11',
+	1
+)
+INSERT INTO student VALUES (
+	5,
+	'Steve',
+	'Block',
+	'Stevenson@JMT.com',
+	'2000/10/08',
+	3
+)
+  </code></pre>
+</section>
+
+    </div>
+  </div>
+</section>
+
+<section class="accordion">
+  <button class="accordion-header">Special Queries</button>
+  <div class="accordion-content">
+    <div class="accordion-body">
+		<!--Fall 2023 Video Games-->
+
+<section class="code-block">
+  <h2>Database Schema Setup</h2>
+  <p class="code-desc">
+    These are the CREATE TABLE queries used to build the schema.
+  </p>
+
+  <pre><code class="sql">
+<!--My query here-->
+/*
+Display the average grade for a specific class section.
+
+This query will display the average grade in the class PSYCH 101 Section 1 in Fall 2024
+*/
+
+SELECT c.ctitle, AVG(e.egrade) AS ClassAverageGrade
+	FROM enrollment e, course c
+	WHERE e.ccode = 2 AND e.csid = 1 AND e.cssemester = 'FALL' AND e.csyear = 2024 AND c.ccode = e.ccode
+	GROUP BY e.ccode, e.csid, e.cssemester, e.csyear, c.ctitle
+
+
+
+/*
+Identify students who are enrolled in more than three courses
+
+(No student enrolled in more than 3 courses. Result will be nothing)
+*/
+SELECT st.stfirstname AS FirstName, st.stlastname AS LastName
+	FROM student st
+	JOIN enrollment e
+	ON st.stid = e.stid
+	WHERE (
+		SELECT COUNT(stid) 
+		FROM enrollment 
+		GROUP BY stid 
+		HAVING st.stid = stid
+		) > 3
+
+
+
+/*
+Generate a report of all classrooms being used in a specific semester
+
+This query shows all classrooms being used in spring 2026 semester
+*/
+SELECT cs.cssemester AS Semester, cs.csyear AS Year, b.bname AS Building, cr.roomno AS RoomNum
+	FROM section cs
+	JOIN classroom cr
+	ON cs.roomno = cr.roomno AND cs.bid = cr.bid
+	JOIN building b
+	ON cr.bid = b.bid
+	WHERE cs.cssemester = 'SPRING' AND cs.csyear = 2026
+
+
+
+/*
+List all faculty members teaching in a specific semester
+
+This query will list all falculty members teaching in the spring 2026 semester
+*/
+SELECT cs.cssemester AS Semester, cs.csyear AS Year, f.ffirstname AS FirstName, f.flastname AS LastName
+	FROM section cs
+	JOIN falculty f
+	ON cs.fid = f.fid
+	WHERE cs.cssemester = 'SPRING' AND cs.csyear = 2026
+  </code></pre>
+</section>
+
+    </div>
+  </div>
+</section>
+
+
+</main>
+<script>
+document.querySelectorAll('.accordion-header').forEach(button => {
+  button.addEventListener('click', () => {
+    const content = button.nextElementSibling; // .accordion-content
+
+    // If currently expanded (we used 'none' as the "fully open" marker)
+    const isExpandedInline = content.style.maxHeight && content.style.maxHeight !== '0px' && content.style.maxHeight !== 'none';
+
+    if (isExpandedInline || (content.style.maxHeight === 'none')) {
+      // Collapse: animate from current height -> 0
+      // If maxHeight is 'none' we need to set a fixed start height first:
+      if (content.style.maxHeight === 'none') {
+        // set explicit height equal to current full height
+        content.style.maxHeight = content.scrollHeight + 'px';
+        // force reflow before changing to 0 so transition runs
+        requestAnimationFrame(() => {
+          content.style.transition = 'max-height 0.35s ease';
+          content.style.maxHeight = '0';
+        });
+      } else {
+        // normal collapse
+        content.style.transition = 'max-height 0.35s ease';
+        content.style.maxHeight = '0';
+      }
+
+      // optional: remove 'none' marker if present after collapse completes
+      const onCollapseEnd = function () {
+        // ensure it's fully collapsed, then remove inline maxHeight to fall back to CSS default
+        if (content.style.maxHeight === '0px') {
+          content.style.maxHeight = ''; 
+        }
+        content.removeEventListener('transitionend', onCollapseEnd);
+      };
+      content.addEventListener('transitionend', onCollapseEnd);
+
+    } else {
+      // Expand: animate to scrollHeight then switch to 'none' so nested changes are allowed
+      content.style.transition = 'max-height 0.35s ease';
+      // set to required height to animate
+      content.style.maxHeight = content.scrollHeight + 'px';
+
+      // when animation ends, set maxHeight to 'none' so inner content can grow dynamically later
+      const onExpandEnd = function () {
+        content.style.maxHeight = 'none';
+        content.removeEventListener('transitionend', onExpandEnd);
+      };
+      content.addEventListener('transitionend', onExpandEnd);
+    }
+  });
+});
+</script>
+
+
+</body>
+</html>

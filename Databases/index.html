@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Game Development Projects</title>
+  <link rel="stylesheet" href="gamedev.css" />
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <h1>Game Development Projects</h1>
+
+    <!-- Navigation (moved back inside header) -->
+    <nav>
+      <a href="../index.html">🏠 Home</a>
+      <a href="../Artificial Intelligence/index.html">🤖 AI</a>
+      <a href="../Coding/index.html">💻 Coding</a>
+      <a href="../Game Development/index.html">🎮 Game Dev</a>
+      <a href="../Databases/index.html">🗄️ Databases</a>
+	  <a href="../3D_Modeling/index.html">🟠 Blender </a>
+    </nav>
+  </header>
+
+  <main>
+  
+    <!-- Fall 2024 Semester -->
+<section class="accordion">
+  <button class="accordion-header">Fall 2024</button>
+  <div class="accordion-content">
+    <div class="accordion-body">
+		<!--Fall 2023 Video Games-->
+
+	<p>
+	<a href = "Query_Snippets/CITA_245_Query_Snippets.html"> Query Snippets </a>
+	</p>
+		<!--Final Project for 245-->
+		  <section class="pdf-viewer">
+			  <h3>Documentation</h3>
+			  <button class="fullscreen-btn">🔎 Fullscreen</button>
+			  <iframe src="Projects/CITA_245_Final_Project.pdf"
+					  width="100%" height="600px"
+					  style="border: 1px solid #ccc; border-radius: 4px;"
+					  class="pdf-frame">
+			  </iframe>
+		  </section>
+    </div>
+  </div>
+</section>
+
+    <!-- Sprint 202t Semester -->
+<section class="accordion">
+  <button class="accordion-header">Spring 2025</button>
+  <div class="accordion-content">
+    <div class="accordion-body">
+		<!--Fall 2023 Video Games-->
+		
+		
+			<p>
+			<a href = "Query_Snippets/CITA_345_Query_Snippets.html"> Query Snippets </a>
+			</p>
+		<!--Final Project for 245-->
+		  <section class="pdf-viewer">
+			  <h3>Documentation</h3>
+			  <button class="fullscreen-btn">🔎 Fullscreen</button>
+			  <iframe src="Projects/CITA_345_Final_Project.pdf"
+					  width="100%" height="600px"
+					  style="border: 1px solid #ccc; border-radius: 4px;"
+					  class="pdf-frame">
+			  </iframe>
+		  </section>
+    </div>
+  </div>
+</section>
+
+
+    </div>
+  </div>
+  
+  
+</section>
+  </main>
+  
+<script>
+document.querySelectorAll('.accordion-header').forEach(button => {
+  button.addEventListener('click', () => {
+    const content = button.nextElementSibling; // .accordion-content
+
+    // If currently expanded (we used 'none' as the "fully open" marker)
+    const isExpandedInline = content.style.maxHeight && content.style.maxHeight !== '0px' && content.style.maxHeight !== 'none';
+
+    if (isExpandedInline || (content.style.maxHeight === 'none')) {
+      // Collapse: animate from current height -> 0
+      // If maxHeight is 'none' we need to set a fixed start height first:
+      if (content.style.maxHeight === 'none') {
+        // set explicit height equal to current full height
+        content.style.maxHeight = content.scrollHeight + 'px';
+        // force reflow before changing to 0 so transition runs
+        requestAnimationFrame(() => {
+          content.style.transition = 'max-height 0.35s ease';
+          content.style.maxHeight = '0';
+        });
+      } else {
+        // normal collapse
+        content.style.transition = 'max-height 0.35s ease';
+        content.style.maxHeight = '0';
+      }
+
+      // optional: remove 'none' marker if present after collapse completes
+      const onCollapseEnd = function () {
+        // ensure it's fully collapsed, then remove inline maxHeight to fall back to CSS default
+        if (content.style.maxHeight === '0px') {
+          content.style.maxHeight = ''; 
+        }
+        content.removeEventListener('transitionend', onCollapseEnd);
+      };
+      content.addEventListener('transitionend', onCollapseEnd);
+
+    } else {
+      // Expand: animate to scrollHeight then switch to 'none' so nested changes are allowed
+      content.style.transition = 'max-height 0.35s ease';
+      // set to required height to animate
+      content.style.maxHeight = content.scrollHeight + 'px';
+
+      // when animation ends, set maxHeight to 'none' so inner content can grow dynamically later
+      const onExpandEnd = function () {
+        content.style.maxHeight = 'none';
+        content.removeEventListener('transitionend', onExpandEnd);
+      };
+      content.addEventListener('transitionend', onExpandEnd);
+    }
+  });
+});
+</script>
+
+<script>
+document.querySelectorAll(".fullscreen-btn").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const iframe = btn.nextElementSibling; // assumes iframe is right after button
+    if (iframe.requestFullscreen) {
+      iframe.requestFullscreen();
+    } else if (iframe.webkitRequestFullscreen) { /* Safari */
+      iframe.webkitRequestFullscreen();
+    } else if (iframe.msRequestFullscreen) { /* IE11 */
+      iframe.msRequestFullscreen();
+    }
+  });
+});
+</script>
+
+
+
+</body>
+</html>

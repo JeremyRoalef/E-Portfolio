@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Code Showcase</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header>
+    <h1>CITA 245 - Query Showcase</h1>
+    <nav>
+      <a href="../../index.html">🏠 Home</a>
+      <a href="../index.html">🎮 Back to Game Dev</a>
+      <a href="../../Artificial Intelligence/index.html">🤖 AI</a>
+      <a href="../../Coding/index.html">💻 Coding</a>
+      <a href="../../Databases/index.html">🗄️ Databases</a>
+	  <a href="../../3D_Modeling/index.html">🟠 Blender </a>
+    </nav>
+  </header>
+
+  <main>
+ <section class="accordion">
+  <button class="accordion-header">Operational Database Queries</button>
+  <div class="accordion-content">
+    <div class="accordion-body">
+      <!-- lots of content here (project cards, nested accordions, images, PDFs, etc.) -->
+	  
+	  
+		<!--Fall 2025 Projects-->
+		
+		<!--Chamber Fall - Agile Development Lifecycle-->
+        <div class="project-card">
+					  
+			<!-- Sprint 1-->
+<div class="accordion nested-accordion">
+  <button class="accordion-header">CREATE TABLE Queries</button>
+  <div class="accordion-content">
+    <div class="code-block">
+      <h2>SQL Schema Setup</h2>
+      <pre><code class="sql">
+<!--My query here-->
+CREATE TABLE Author (
+	AuthorID INT PRIMARY KEY, Name VARCHAR(255),
+	Nationality VARCHAR(100),
+	BirthYear INT
+);
+
+CREATE TABLE Book (
+	BookID INT PRIMARY KEY, Title VARCHAR(255),
+	AuthorID INT,
+	Genre VARCHAR(100),
+	PublishedYear INT,
+	ISBN VARCHAR(50),
+	FOREIGN KEY (AuthorID) REFERENCES Author (AuthorID)
+);
+
+CREATE TABLE BookCategory (
+	BookID INT,
+	CategoryID INT,
+	PRIMARY KEY (BookID, CategoryID),
+	FOREIGN KEY (BookID) REFERENCES Book (BookID),
+	FOREIGN KEY (CategoryID) REFERENCES Category(CategoryID)
+);
+
+CREATE TABLE Borrowing (
+	BorrowID INT PRIMARY KEY,
+	BookID INT,
+	MemberID INT,
+	BorrowDate DATE,
+	ReturnDate DATE,
+	FOREIGN KEY (BookID) REFERENCES Book (BookID),
+	FOREIGN KEY (MemberID) REFERENCES Member (MemberID)
+);
+
+CREATE TABLE Category (
+	CategoryID INT PRIMARY KEY,
+	CategoryName VARCHAR(100)
+);
+
+CREATE TABLE Member (
+	MemberID INT PRIMARY KEY,
+	FirstName VARCHAR(255),
+	LastName VARCHAR(255),
+	Email VARCHAR(255),
+	PhoneNumber VARCHAR(50),
+	MembershipDate DATE
+);
+
+CREATE TABLE Reservation (
+	ReservationID INT PRIMARY KEY,
+	BookID INT,
+	MemberID INT,
+	ReservationDate DATE,
+	FOREIGN KEY (BookID) REFERENCES Book (BookID),
+	FOREIGN KEY (MemberID) REFERENCES Member (MemberID)
+);
+
+CREATE TABLE Review (
+	ReviewID INT PRIMARY KEY,
+	BookID INT,
+	MemberID INT,
+	Rating INT,
+	Comment TEXT,
+	ReviewDate DATE,
+	FOREIGN KEY (BookID) REFERENCES Book (BookID),
+	FOREIGN KEY (MemberID) REFERENCES Member (MemberID)
+);
+      </code></pre>
+    </div>
+  </div>
+</div>
+
+<div class="accordion nested-accordion">
+  <button class="accordion-header">INSERT INTO Queries</button>
+  <div class="accordion-content">
+    <div class="code-block">
+      <h2>SQL Schema Setup</h2>
+      <pre><code class="sql">
+<!--My query here-->
+INSERT INTO Author VALUES (1, 'J.K. Rowling', 'British', 1965);
+INSERT INTO Author VALUES (2, 'George Orwell', 'British', 1903);
+INSERT INTO Author VALUES (3, 'Jane Austen', 'British', 1775);
+
+INSERT INTO Book VALUES (1, 'Harry Potter and the Philosopher’ ’s Stone', 1, 'Fantasy',
+1997, '9780747532699');
+INSERT INTO Book VALUES (2, '1984', 2, 'Dystopian', 1949, '9780451524935');
+INSERT INTO Book VALUES (3, 'Pride and Prejudice', 3, 'Romance', 1813,
+'9780141439518');
+
+
+INSERT INTO BookCategory VALUES (1, 1);
+INSERT INTO BookCategory VALUES (2, 2);
+INSERT INTO BookCategory VALUES (3, 2);
+
+INSERT INTO Borrowing VALUES (1, 1, 1, '2023-01-10', '2023-01-20');
+INSERT INTO Borrowing VALUES (2, 2, 2, '2023-01-15', '2023-01-25');
+
+INSERT INTO Category VALUES (1, 'Fiction');
+INSERT INTO Category VALUES (2, 'Classic');
+
+INSERT INTO Member VALUES (1, 'Alice', 'Smith', 'alice@example.com', '1234567890',
+'2020-01-10');
+INSERT INTO Member VALUES (2, 'Bob', 'Johnson', 'bob@example.com', '0987654321',
+'2019-06-23');
+
+
+INSERT INTO Reservation VALUES (1, 3, 1, '2023-02-01');
+
+INSERT INTO Review VALUES (1, 1, 1, 5, 'Great book!', '2023-01-21');
+INSERT INTO Review VALUES (2, 2, 2, 4, 'Thought-provoking.', '2023-01-26');
+      </code></pre>
+    </div>
+  </div>
+</div>
+    </div>
+  </div>
+</section>	
+
+ <section class="accordion">
+  <button class="accordion-header">Analytical Database Queries</button>
+  <div class="accordion-content">
+    <div class="accordion-body">
+      <!-- lots of content here (project cards, nested accordions, images, PDFs, etc.) -->
+	  
+	  
+		<!--Fall 2025 Projects-->
+		
+<div class="accordion nested-accordion">
+  <button class="accordion-header">CREATE TABLE Queries</button>
+  <div class="accordion-content">
+    <div class="code-block">
+      <h2>SQL Schema Setup</h2>
+      <pre><code class="sql">
+<!--My query here-->
+CREATE TABLE CATEGORY (
+	CategoryKey INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
+	CategoryID INT NOT NULL,
+	CategoryName VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE MEMBER (
+	Memberkey INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
+	MemberID INT NOT NULL,
+	FirstName VARCHAR(255),
+	LastName VARCHAR(255),
+	Email VARCHAR(255) NOT NULL,
+	PhoneNumber VARCHAR(50),
+	MembershipDate DATE NOT NULL
+);
+
+CREATE TABLE RESERVATIONFACT (
+	ReservationID INT PRIMARY KEY,
+	BookKey INT,
+	MemberKey INT,
+	AuthorKey INT,
+	CalendarKey INT,
+	FOREIGN KEY (BookKey) REFERENCES BOOK(BookKey),
+	FOREIGN KEY (MemberKey) REFERENCES MEMBER(MemberKey),
+	FOREIGN KEY (AuthorKey) REFERENCES AUTHOR(AuthorKey),
+	FOREIGN KEY (CalendarKey) REFERENCES CALENDAR(CalendarKey)
+);
+
+CREATE TABLE REVIEWFACT (
+	ReviewID INT PRIMARY KEY,
+	BookKey INT,
+	MemberKey INT,
+	AuthorKey INT,
+	CalendarKey INT,
+	Rating INT,
+	Comment VARCHAR(MAX),
+	FOREIGN KEY (BookKey) REFERENCES BOOK(BookKey),
+	FOREIGN KEY (MemberKey) REFERENCES MEMBER(MemberKey),
+	FOREIGN KEY (AuthorKey) REFERENCES AUTHOR(AuthorKey),
+	FOREIGN KEY (CalendarKey) REFERENCES CALENDAR(CalendarKey)
+);
+
+CREATE TABLE AUTHOR (
+	AuthorKey INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
+  	AuthorID INT NOT NULL,
+	Name VARCHAR(255) NOT NULL,
+	Nationality VARCHAR(100) NOT NULL,
+	BirthYear INT
+);
+
+CREATE TABLE BOOK (
+	BookKey INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
+	BookID INT NOT NULL,
+	Title VARCHAR(255)NOT NULL,
+	Genre VARCHAR(100) NOT NULL,
+	PublishedYear INT NOT NULL,
+	ISBN VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE BORROWFACT (
+	BorrowID INT PRIMARY KEY,
+	BookKey INT,
+	MemberKey INT,
+	AuthorKey INT,
+	CalendarKey INT,
+	BorrowDuration INT,
+	ReturnedLate BIT,
+	FOREIGN KEY (BookKey) REFERENCES BOOK(BookKey),
+	FOREIGN KEY (MemberKey) REFERENCES MEMBER(MemberKey),
+	FOREIGN KEY (AuthorKey) REFERENCES AUTHOR(AuthorKey),
+	FOREIGN KEY (CalendarKey) REFERENCES CALENDAR(CalendarKey)
+);
+
+CREATE TABLE BRIDGEBOOKCATEGORYFACT (
+	BookKey INT,
+	CategoryKey INT,
+	FOREIGN KEY (CategoryKey) REFERENCES CATEGORY(CategoryKey),
+	FOREIGN KEY (BookKey) REFERENCES BOOK(BookKey)
+);
+
+CREATE TABLE CALENDAR(
+	CalendarKey INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
+	FullDate DATE NOT NULL,
+	Year INT NOT NULL,
+	Month INT NOT NULL,
+	DayOfMonth INT NOT NULL,
+	DayOfWeek VARCHAR(10) NOT NULL,
+	Quarter INT NOT NULL,
+	CHECK (Quarter > 0 AND Quarter <= 4),
+	CHECK (Month > 0 AND Month <= 12),
+	CHECK (DayOfMonth > 0 AND DayOfMonth <= 31)
+);
+
+
+/*
+ETL Infastructure for inserting into Review Fact Table:
+1) Retrieve data from the operational database in the given order:
+	a. ReviewID
+	b. BookID
+	c. MemberID
+	d. AuthorID
+	e. Rating
+	f. Comment
+2) Retrieve the key values from the analytical database and join them with the corresponding IDs.
+3) Insert the values with the keys in the given order:
+	a. ReviewID
+	b. BookKey
+	c. MemberKey
+	d. AuthorKey
+	e. CalendarKey (linked to BorrowDate)
+	d. Rating
+	e. Comment
+4) Prevent existing data from repopulating. Use EXCEPT to remove existing data.
+*/
+
+INSERT INTO [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.REVIEWFACT
+	--SELECTION
+	SELECT 
+		opREV.ReviewID,
+		anaB.BookKey, 
+		anaM.Memberkey, 
+		anaAU.AuthorKey, 
+		anaCAL.CalendarKey, 
+		opREV.Rating,
+		opREV.Comment
+	FROM [CITA 345 - Project 2 - Operational DB LIbrary Management System].dbo.Review opREV
+	--Grab reference to author
+	JOIN [CITA 345 - Project 2 - Operational DB LIbrary Management System].dbo.Book opB
+		ON opB.BookID = opREV.BookID
+	JOIN [CITA 345 - Project 2 - Operational DB LIbrary Management System].dbo.Author opAU
+		ON opAU.AuthorID = opB.AuthorID
+	--Retrieve key values from warehouse
+	JOIN [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.BOOK anaB
+		ON anaB.BookID = opB.BookID
+	JOIN [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.MEMBER anaM
+		ON anaM.MemberID = opREV.MemberID
+	JOIN [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.AUTHOR anaAU
+		ON anaAU.AuthorID = opAU.AuthorID
+	JOIN [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.CALENDAR anaCAL
+		ON anaCAL.FullDate = opREV.ReviewDate
+	--Exclusion of existing data
+	EXCEPT
+	SELECT 
+		anaREV.ReviewID, 
+		anaREV.BookKey, 
+		anaREV.MemberKey, 
+		anaREV.AuthorKey, 
+		anaREV.CalendarKey, 
+		anaREV.Rating, 
+		anaREV.Comment
+	FROM [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.REVIEWFACT anaREV
+
+/*
+ETL Process for Author Dimension:
+
+1) Get the required information from the operational database in the given order:
+	a. author ID
+	b. Name
+	c. Nationality
+	d. Birth Year
+
+2) After retrieving the information, you need to insert it into the author dimension of the analytical
+   database. Also, you need to FILTER out rows that already exist in the analytical database.
+   Since the data in the analytical database are technically a subset of the data in the operational
+   database, you can use EXCEPT to exclude certain rows from being inserted (similar to NOT IN operator).
+   This should generally work for the purposes of this data warehouse, but is not the end all be all solution.
+*/
+
+--opA stands for operational DB author table
+--anaA stands for analytical DB author dimension
+INSERT INTO [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.AUTHOR (AuthorID, Name, Nationality, BirthYear)
+	SELECT opA.AuthorID, opA.name, opA.Nationality, opA.BirthYear
+		FROM [CITA 345 - Project 2 - Operational DB LIbrary Management System].dbo.Author opA
+		EXCEPT
+		SELECT anaA.authorID, anaA.name, anaA.nationality, anaA.BirthYear
+		FROM [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.AUTHOR anaA
+
+/*
+ETL Process for inserting new books into the warehouse:
+
+1) Select columns in the following order:
+	a. BookID
+	b. Title
+	c. Genre
+	d. PublishedYear
+	e. ISBN
+2) Use an insert statement to insert into the analytical DB book dimension, and use EXCEPT to exclude entries that
+   already exist in the dimension
+*/
+
+INSERT INTO [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.BOOK
+	SELECT opB.BookID, opb.Title, opb.Genre, opb.PublishedYear, opb.ISBN
+		FROM [CITA 345 - Project 2 - Operational DB LIbrary Management System].dbo.Book opB
+		EXCEPT
+		SELECT anaB.BookID, anaB.Title, anaB.Genre, anaB.PublishedYear, anaB.ISBN
+		FROM [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.BOOK anaB
+
+/*
+ETL Infastructure for inserting into Borrow Fact Table:
+1) Retrieve data from the operational database in the given order:
+	a. BorrowID
+	b. BookID
+	c. MemberID
+	d. AuthorID
+	e. BorrowDate
+2) Retrieve the key values from the analytical database and join them with the corresponding IDs.
+3) Insert the values with the keys in the given order:
+	a. BorrowID
+	b. BookKey
+	c. MemberKey
+	d. AuthorKey
+	e. CalendarKey (linked to BorrowDate)
+	d. BorrowDuration (calculated by ReturnDate-BorrowDate)
+	e. ReturnedLate (if ReturnDate-BorrowDate > 14, then value = 1. else, value = 0)
+4) Prevent existing data from repopulating. Use EXCEPT to remove existing data.
+*/
+
+INSERT INTO [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.BORROWFACT
+	--SELECTION
+	SELECT 
+		opBOR.BorrowID, 
+		anaB.BookKey, 
+		anaM.Memberkey, 
+		anaAU.AuthorKey, 
+		anaCAL.CalendarKey, 
+		DATEDIFF(DAY, opBOR.BorrowDate, opBOR.ReturnDate) AS BorrowDuration, 
+		CAST(CASE WHEN DATEDIFF(DAY,opBor.BorrowDate, opBOR.ReturnDate) > 14 THEN 1 ELSE 0 END AS bit) AS ReturnedLate
+	FROM [CITA 345 - Project 2 - Operational DB LIbrary Management System].dbo.Borrowing opBOR
+	--Grab reference to author
+	JOIN [CITA 345 - Project 2 - Operational DB LIbrary Management System].dbo.Book opB
+		ON opB.BookID = opBOR.BookID
+	JOIN [CITA 345 - Project 2 - Operational DB LIbrary Management System].dbo.Author opAU
+		ON opAU.AuthorID = opB.AuthorID
+	--Retrieve key values from warehouse
+	JOIN [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.BOOK anaB
+		ON anaB.BookID = opB.BookID
+	JOIN [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.MEMBER anaM
+		ON anaM.MemberID = opBOR.MemberID
+	JOIN [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.AUTHOR anaAU
+		ON anaAU.AuthorID = opAU.AuthorID
+	JOIN [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.CALENDAR anaCAL
+		ON anaCAL.FullDate = opBOR.BorrowDate
+	--Exclusion of existing data
+	EXCEPT
+	SELECT 
+		anaBOR.BorrowID, 
+		anaBOR.BookKey, 
+		anaBOR.MemberKey, 
+		anaBOR.AuthorKey, 
+		anaBOR.CalendarKey, 
+		anaBOR.BorrowDuration, 
+		anaBOR.ReturnedLate
+	FROM [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.BORROWFACT anaBOR
+
+
+/*
+ETL Process for inserting into BridgeBookCategory Fact Table
+
+1) Retrieve the bookID and CategoryID from each row in given order:
+	a. BookID
+	b. CategoryID
+2) Join the BookID onto the book dimension where op.BookID = analytical.BookID, and get THAT BookKey.
+3) Join the CategoryID onto the Category Dimension where op.CategoryID = analytical.CategoryID, and get THAT CategoryKey
+4) Insert the BookID-CategoryID key values as a new entry into the BridgeBookCategory Fact Table in the given order:
+	a. BookKey
+	b. CategoryKey
+5) Exclude exising rows from the insertion process. Use EXCEPT
+*/
+
+--Insertion into BRIDGEBOOKCATEGORYFACT
+INSERT INTO [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.BRIDGEBOOKCATEGORYFACT
+	--Row Selection
+	SELECT anaBook.BookKey, anaCategory.CategoryKey
+		FROM [CITA 345 - Project 2 - Operational DB LIbrary Management System].dbo.BookCategory opBookCategory
+		JOIN [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.BOOK anaBook
+		ON anaBook.BookID = opBookCategory.BookID
+		JOIN [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.CATEGORY anaCategory
+		ON anaCategory.CategoryID = opBookCategory.CategoryID
+		--Exclusion of existing rows
+		EXCEPT
+		SELECT anaBBCF.BookKey, anaBBCF.CategoryKey
+		FROM [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.BRIDGEBOOKCATEGORYFACT anaBBCF
+
+--Pure ChatGPT Code (it works, though)
+
+WITH DateRange AS (
+    SELECT CAST('2010-01-01' AS DATE) AS CalendarDate
+    UNION ALL
+    SELECT DATEADD(DAY, 1, CalendarDate)
+    FROM DateRange
+    WHERE CalendarDate < '2030-12-31')
+
+INSERT INTO [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.CALENDAR
+SELECT
+    CalendarDate AS FullDate,
+    YEAR(CalendarDate) AS Year,
+    MONTH(CalendarDate) AS Month,
+    DAY(CalendarDate) AS DayOfMonth,
+    DATENAME(WEEKDAY, CalendarDate) AS DayOfWeek,
+    DATEPART(QUARTER, CalendarDate) AS Quarter
+FROM DateRange
+OPTION (MAXRECURSION 32767);  -- Needed for large date ranges
+
+/*
+ETL Infastructure for inserting into Category Dimension
+
+1) Retrieve information from the operational DB category table in the following order:
+	a. CategoryID
+	b. CategoryName
+2) Insert the data into the analytical Category dimension. Use EXCEPT to exclude existing data in the dimension
+*/
+
+--Insertion into Category Dimension
+INSERT INTO [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.CATEGORY
+	--Row Selection
+	SELECT opC.CategoryID, opC.CategoryName
+		FROM [CITA 345 - Project 2 - Operational DB LIbrary Management System].dbo.Category opC
+		--Exclusion of existing rows
+		EXCEPT
+		SELECT anaC.CategoryID, anaC.CategoryName
+		FROM [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.CATEGORY anaC
+
+/*
+ETL Infastructure for inserting into Member Dimension
+
+1) Retrieve information from operational DB in given order:
+	a. MemberID
+	b. FirstName
+	c. LastName
+	d. Email
+	e. PhoneNumber
+	f. MembershipDate
+2) Insert the data into the analytical Member Dimension. Use EXCEPT to exclude data already in the dimension
+*/
+
+--Insertion into Member dimension
+INSERT INTO [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.MEMBER
+	--Row Selection
+	SELECT opM.MemberID, opM.FirstName, opM.LastName, opM.Email, opM.PhoneNumber, opM.MembershipDate
+		FROM [CITA 345 - Project 2 - Operational DB LIbrary Management System].dbo.Member opM
+		--Exclusion of existing data
+		EXCEPT
+		SELECT anaM.MemberID, anaM.FirstName, anaM.LastName, anaM.Email, anaM.PhoneNumber, anaM.MembershipDate
+		FROM [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.MEMBER anaM
+
+/*
+ETL Infastructure for inserting into Reservation Fact Table:
+1) Retrieve data from the operational database in the given order:
+	a. ReservationID
+	b. BookID
+	c. MemberID
+	d. AuthorID
+	e. ReservationDate
+2) Retrieve the key values from the analytical database and join them with the corresponding IDs.
+3) Insert the values with the keys in the given order:
+	a. ReviewID
+	b. BookKey
+	c. MemberKey
+	d. AuthorKey
+	e. CalendarKey (linked to BorrowDate)
+4) Prevent existing data from repopulating. Use EXCEPT to remove existing data.
+*/
+
+INSERT INTO [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.RESERVATIONFACT
+	--SELECTION
+	SELECT 
+		opRES.ReservationID,
+		anaB.BookKey, 
+		anaM.Memberkey, 
+		anaAU.AuthorKey, 
+		anaCAL.CalendarKey
+	FROM [CITA 345 - Project 2 - Operational DB LIbrary Management System].dbo.Reservation opRES
+	--Grab reference to author
+	JOIN [CITA 345 - Project 2 - Operational DB LIbrary Management System].dbo.Book opB
+		ON opB.BookID = opRES.BookID
+	JOIN [CITA 345 - Project 2 - Operational DB LIbrary Management System].dbo.Author opAU
+		ON opAU.AuthorID = opB.AuthorID
+	--Retrieve key values from warehouse
+	JOIN [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.BOOK anaB
+		ON anaB.BookID = opB.BookID
+	JOIN [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.MEMBER anaM
+		ON anaM.MemberID = opRES.MemberID
+	JOIN [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.AUTHOR anaAU
+		ON anaAU.AuthorID = opAU.AuthorID
+	JOIN [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.CALENDAR anaCAL
+		ON anaCAL.FullDate = opRES.ReservationDate
+	--Exclusion of existing data
+	EXCEPT
+	SELECT 
+		anaRES.ReservationID, 
+		anaRES.BookKey, 
+		anaRES.MemberKey, 
+		anaRES.AuthorKey, 
+		anaRES.CalendarKey
+	FROM [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.RESERVATIONFACT anaRES
+      </code></pre>
+    </div>
+  </div>
+</div> 
+
+
+<div class="accordion nested-accordion">
+  <button class="accordion-header">INSERT INTO Queries</button>
+  <div class="accordion-content">
+    <div class="code-block">
+      <h2>SQL Schema Setup</h2>
+      <pre><code class="sql">
+INSERT INTO [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.REVIEWFACT
+	--SELECTION
+	SELECT 
+		opREV.ReviewID,
+		anaB.BookKey, 
+		anaM.Memberkey, 
+		anaAU.AuthorKey, 
+		anaCAL.CalendarKey, 
+		opREV.Rating,
+		opREV.Comment
+	FROM [CITA 345 - Project 2 - Operational DB LIbrary Management System].dbo.Review opREV
+	--Grab reference to author
+	JOIN [CITA 345 - Project 2 - Operational DB LIbrary Management System].dbo.Book opB
+		ON opB.BookID = opREV.BookID
+	JOIN [CITA 345 - Project 2 - Operational DB LIbrary Management System].dbo.Author opAU
+		ON opAU.AuthorID = opB.AuthorID
+	--Retrieve key values from warehouse
+	JOIN [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.BOOK anaB
+		ON anaB.BookID = opB.BookID
+	JOIN [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.MEMBER anaM
+		ON anaM.MemberID = opREV.MemberID
+	JOIN [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.AUTHOR anaAU
+		ON anaAU.AuthorID = opAU.AuthorID
+	JOIN [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.CALENDAR anaCAL
+		ON anaCAL.FullDate = opREV.ReviewDate
+	--Exclusion of existing data
+	EXCEPT
+	SELECT 
+		anaREV.ReviewID, 
+		anaREV.BookKey, 
+		anaREV.MemberKey, 
+		anaREV.AuthorKey, 
+		anaREV.CalendarKey, 
+		anaREV.Rating, 
+		anaREV.Comment
+	FROM [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.REVIEWFACT anaREV
+
+
+--opA stands for operational DB author table
+--anaA stands for analytical DB author dimension
+INSERT INTO [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.AUTHOR (AuthorID, Name, Nationality, BirthYear)
+	SELECT opA.AuthorID, opA.name, opA.Nationality, opA.BirthYear
+		FROM [CITA 345 - Project 2 - Operational DB LIbrary Management System].dbo.Author opA
+		EXCEPT
+		SELECT anaA.authorID, anaA.name, anaA.nationality, anaA.BirthYear
+		FROM [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.AUTHOR anaA
+
+
+INSERT INTO [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.BOOK
+	SELECT opB.BookID, opb.Title, opb.Genre, opb.PublishedYear, opb.ISBN
+		FROM [CITA 345 - Project 2 - Operational DB LIbrary Management System].dbo.Book opB
+		EXCEPT
+		SELECT anaB.BookID, anaB.Title, anaB.Genre, anaB.PublishedYear, anaB.ISBN
+		FROM [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.BOOK anaB
+
+
+INSERT INTO [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.BORROWFACT
+	--SELECTION
+	SELECT 
+		opBOR.BorrowID, 
+		anaB.BookKey, 
+		anaM.Memberkey, 
+		anaAU.AuthorKey, 
+		anaCAL.CalendarKey, 
+		DATEDIFF(DAY, opBOR.BorrowDate, opBOR.ReturnDate) AS BorrowDuration, 
+		CAST(CASE WHEN DATEDIFF(DAY,opBor.BorrowDate, opBOR.ReturnDate) > 14 THEN 1 ELSE 0 END AS bit) AS ReturnedLate
+	FROM [CITA 345 - Project 2 - Operational DB LIbrary Management System].dbo.Borrowing opBOR
+	--Grab reference to author
+	JOIN [CITA 345 - Project 2 - Operational DB LIbrary Management System].dbo.Book opB
+		ON opB.BookID = opBOR.BookID
+	JOIN [CITA 345 - Project 2 - Operational DB LIbrary Management System].dbo.Author opAU
+		ON opAU.AuthorID = opB.AuthorID
+	--Retrieve key values from warehouse
+	JOIN [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.BOOK anaB
+		ON anaB.BookID = opB.BookID
+	JOIN [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.MEMBER anaM
+		ON anaM.MemberID = opBOR.MemberID
+	JOIN [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.AUTHOR anaAU
+		ON anaAU.AuthorID = opAU.AuthorID
+	JOIN [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.CALENDAR anaCAL
+		ON anaCAL.FullDate = opBOR.BorrowDate
+	--Exclusion of existing data
+	EXCEPT
+	SELECT 
+		anaBOR.BorrowID, 
+		anaBOR.BookKey, 
+		anaBOR.MemberKey, 
+		anaBOR.AuthorKey, 
+		anaBOR.CalendarKey, 
+		anaBOR.BorrowDuration, 
+		anaBOR.ReturnedLate
+	FROM [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.BORROWFACT anaBOR
+	
+
+--Insertion into BRIDGEBOOKCATEGORYFACT
+INSERT INTO [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.BRIDGEBOOKCATEGORYFACT
+	--Row Selection
+	SELECT anaBook.BookKey, anaCategory.CategoryKey
+		FROM [CITA 345 - Project 2 - Operational DB LIbrary Management System].dbo.BookCategory opBookCategory
+		JOIN [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.BOOK anaBook
+		ON anaBook.BookID = opBookCategory.BookID
+		JOIN [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.CATEGORY anaCategory
+		ON anaCategory.CategoryID = opBookCategory.CategoryID
+		--Exclusion of existing rows
+		EXCEPT
+		SELECT anaBBCF.BookKey, anaBBCF.CategoryKey
+		FROM [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.BRIDGEBOOKCATEGORYFACT anaBBCF
+
+--Pure ChatGPT Code (it works, though)
+
+WITH DateRange AS (
+    SELECT CAST('2010-01-01' AS DATE) AS CalendarDate
+    UNION ALL
+    SELECT DATEADD(DAY, 1, CalendarDate)
+    FROM DateRange
+    WHERE CalendarDate < '2030-12-31')
+
+INSERT INTO [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.CALENDAR
+SELECT
+    CalendarDate AS FullDate,
+    YEAR(CalendarDate) AS Year,
+    MONTH(CalendarDate) AS Month,
+    DAY(CalendarDate) AS DayOfMonth,
+    DATENAME(WEEKDAY, CalendarDate) AS DayOfWeek,
+    DATEPART(QUARTER, CalendarDate) AS Quarter
+FROM DateRange
+OPTION (MAXRECURSION 32767);  -- Needed for large date ranges
+
+
+--Insertion into Category Dimension
+INSERT INTO [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.CATEGORY
+	--Row Selection
+	SELECT opC.CategoryID, opC.CategoryName
+		FROM [CITA 345 - Project 2 - Operational DB LIbrary Management System].dbo.Category opC
+		--Exclusion of existing rows
+		EXCEPT
+		SELECT anaC.CategoryID, anaC.CategoryName
+		FROM [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.CATEGORY anaC
+
+
+--Insertion into Member dimension
+INSERT INTO [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.MEMBER
+	--Row Selection
+	SELECT opM.MemberID, opM.FirstName, opM.LastName, opM.Email, opM.PhoneNumber, opM.MembershipDate
+		FROM [CITA 345 - Project 2 - Operational DB LIbrary Management System].dbo.Member opM
+		--Exclusion of existing data
+		EXCEPT
+		SELECT anaM.MemberID, anaM.FirstName, anaM.LastName, anaM.Email, anaM.PhoneNumber, anaM.MembershipDate
+		FROM [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.MEMBER anaM
+
+
+INSERT INTO [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.RESERVATIONFACT
+	--SELECTION
+	SELECT 
+		opRES.ReservationID,
+		anaB.BookKey, 
+		anaM.Memberkey, 
+		anaAU.AuthorKey, 
+		anaCAL.CalendarKey
+	FROM [CITA 345 - Project 2 - Operational DB LIbrary Management System].dbo.Reservation opRES
+	--Grab reference to author
+	JOIN [CITA 345 - Project 2 - Operational DB LIbrary Management System].dbo.Book opB
+		ON opB.BookID = opRES.BookID
+	JOIN [CITA 345 - Project 2 - Operational DB LIbrary Management System].dbo.Author opAU
+		ON opAU.AuthorID = opB.AuthorID
+	--Retrieve key values from warehouse
+	JOIN [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.BOOK anaB
+		ON anaB.BookID = opB.BookID
+	JOIN [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.MEMBER anaM
+		ON anaM.MemberID = opRES.MemberID
+	JOIN [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.AUTHOR anaAU
+		ON anaAU.AuthorID = opAU.AuthorID
+	JOIN [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.CALENDAR anaCAL
+		ON anaCAL.FullDate = opRES.ReservationDate
+	--Exclusion of existing data
+	EXCEPT
+	SELECT 
+		anaRES.ReservationID, 
+		anaRES.BookKey, 
+		anaRES.MemberKey, 
+		anaRES.AuthorKey, 
+		anaRES.CalendarKey
+	FROM [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.RESERVATIONFACT anaRES
+      </code></pre>
+    </div>
+  </div>
+</div> 
+
+	  
+    </div>
+  </div>
+</section>	
+
+
+</main>
+<script>
+document.querySelectorAll('.accordion-header').forEach(button => {
+  button.addEventListener('click', () => {
+    const content = button.nextElementSibling; // .accordion-content
+
+    // If currently expanded (we used 'none' as the "fully open" marker)
+    const isExpandedInline = content.style.maxHeight && content.style.maxHeight !== '0px' && content.style.maxHeight !== 'none';
+
+    if (isExpandedInline || (content.style.maxHeight === 'none')) {
+      // Collapse: animate from current height -> 0
+      // If maxHeight is 'none' we need to set a fixed start height first:
+      if (content.style.maxHeight === 'none') {
+        // set explicit height equal to current full height
+        content.style.maxHeight = content.scrollHeight + 'px';
+        // force reflow before changing to 0 so transition runs
+        requestAnimationFrame(() => {
+          content.style.transition = 'max-height 0.35s ease';
+          content.style.maxHeight = '0';
+        });
+      } else {
+        // normal collapse
+        content.style.transition = 'max-height 0.35s ease';
+        content.style.maxHeight = '0';
+      }
+
+      // optional: remove 'none' marker if present after collapse completes
+      const onCollapseEnd = function () {
+        // ensure it's fully collapsed, then remove inline maxHeight to fall back to CSS default
+        if (content.style.maxHeight === '0px') {
+          content.style.maxHeight = ''; 
+        }
+        content.removeEventListener('transitionend', onCollapseEnd);
+      };
+      content.addEventListener('transitionend', onCollapseEnd);
+
+    } else {
+      // Expand: animate to scrollHeight then switch to 'none' so nested changes are allowed
+      content.style.transition = 'max-height 0.35s ease';
+      // set to required height to animate
+      content.style.maxHeight = content.scrollHeight + 'px';
+
+      // when animation ends, set maxHeight to 'none' so inner content can grow dynamically later
+      const onExpandEnd = function () {
+        content.style.maxHeight = 'none';
+        content.removeEventListener('transitionend', onExpandEnd);
+      };
+      content.addEventListener('transitionend', onExpandEnd);
+    }
+  });
+});
+</script>
+
+
+</body>
+</html>
