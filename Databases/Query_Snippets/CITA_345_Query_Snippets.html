@@ -3,19 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Code Showcase</title>
+  <title>Jeremy Roalef - Query Showcase</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
   <header>
-    <h1>CITA 245 - Query Showcase</h1>
+    <h1>Library Management System Database</h1>
     <nav>
-      <a href="../../index.html">🏠 Home</a>
-      <a href="../index.html">🎮 Back to Game Dev</a>
-      <a href="../../Artificial Intelligence/index.html">🤖 AI</a>
+	  <a href="../../index.html">🏠 Home</a>
+	  <a href="../../Game Development/index.html">🎮 Game Dev</a>
       <a href="../../Coding/index.html">💻 Coding</a>
-      <a href="../../Databases/index.html">🗄️ Databases</a>
+	  <a href="../index.html">🗄️ Back to Databases</a>
 	  <a href="../../3D_Modeling/index.html">🟠 Blender </a>
     </nav>
   </header>
@@ -25,20 +24,11 @@
   <button class="accordion-header">Operational Database Queries</button>
   <div class="accordion-content">
     <div class="accordion-body">
-      <!-- lots of content here (project cards, nested accordions, images, PDFs, etc.) -->
-	  
-	  
-		<!--Fall 2025 Projects-->
-		
-		<!--Chamber Fall - Agile Development Lifecycle-->
         <div class="project-card">
-					  
-			<!-- Sprint 1-->
 <div class="accordion nested-accordion">
   <button class="accordion-header">CREATE TABLE Queries</button>
   <div class="accordion-content">
     <div class="code-block">
-      <h2>SQL Schema Setup</h2>
       <pre><code class="sql">
 <!--My query here-->
 CREATE TABLE Author (
@@ -116,7 +106,6 @@ CREATE TABLE Review (
   <button class="accordion-header">INSERT INTO Queries</button>
   <div class="accordion-content">
     <div class="code-block">
-      <h2>SQL Schema Setup</h2>
       <pre><code class="sql">
 <!--My query here-->
 INSERT INTO Author VALUES (1, 'J.K. Rowling', 'British', 1965);
@@ -171,7 +160,6 @@ INSERT INTO Review VALUES (2, 2, 2, 4, 'Thought-provoking.', '2023-01-26');
   <button class="accordion-header">CREATE TABLE Queries</button>
   <div class="accordion-content">
     <div class="code-block">
-      <h2>SQL Schema Setup</h2>
       <pre><code class="sql">
 <!--My query here-->
 CREATE TABLE CATEGORY (
@@ -267,28 +255,6 @@ CREATE TABLE CALENDAR(
 	CHECK (DayOfMonth > 0 AND DayOfMonth <= 31)
 );
 
-
-/*
-ETL Infastructure for inserting into Review Fact Table:
-1) Retrieve data from the operational database in the given order:
-	a. ReviewID
-	b. BookID
-	c. MemberID
-	d. AuthorID
-	e. Rating
-	f. Comment
-2) Retrieve the key values from the analytical database and join them with the corresponding IDs.
-3) Insert the values with the keys in the given order:
-	a. ReviewID
-	b. BookKey
-	c. MemberKey
-	d. AuthorKey
-	e. CalendarKey (linked to BorrowDate)
-	d. Rating
-	e. Comment
-4) Prevent existing data from repopulating. Use EXCEPT to remove existing data.
-*/
-
 INSERT INTO [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.REVIEWFACT
 	--SELECTION
 	SELECT 
@@ -326,22 +292,6 @@ INSERT INTO [CITA 345 - Project 2 - Analytical DB Library Management System].dbo
 		anaREV.Comment
 	FROM [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.REVIEWFACT anaREV
 
-/*
-ETL Process for Author Dimension:
-
-1) Get the required information from the operational database in the given order:
-	a. author ID
-	b. Name
-	c. Nationality
-	d. Birth Year
-
-2) After retrieving the information, you need to insert it into the author dimension of the analytical
-   database. Also, you need to FILTER out rows that already exist in the analytical database.
-   Since the data in the analytical database are technically a subset of the data in the operational
-   database, you can use EXCEPT to exclude certain rows from being inserted (similar to NOT IN operator).
-   This should generally work for the purposes of this data warehouse, but is not the end all be all solution.
-*/
-
 --opA stands for operational DB author table
 --anaA stands for analytical DB author dimension
 INSERT INTO [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.AUTHOR (AuthorID, Name, Nationality, BirthYear)
@@ -351,18 +301,6 @@ INSERT INTO [CITA 345 - Project 2 - Analytical DB Library Management System].dbo
 		SELECT anaA.authorID, anaA.name, anaA.nationality, anaA.BirthYear
 		FROM [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.AUTHOR anaA
 
-/*
-ETL Process for inserting new books into the warehouse:
-
-1) Select columns in the following order:
-	a. BookID
-	b. Title
-	c. Genre
-	d. PublishedYear
-	e. ISBN
-2) Use an insert statement to insert into the analytical DB book dimension, and use EXCEPT to exclude entries that
-   already exist in the dimension
-*/
 
 INSERT INTO [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.BOOK
 	SELECT opB.BookID, opb.Title, opb.Genre, opb.PublishedYear, opb.ISBN
@@ -370,26 +308,6 @@ INSERT INTO [CITA 345 - Project 2 - Analytical DB Library Management System].dbo
 		EXCEPT
 		SELECT anaB.BookID, anaB.Title, anaB.Genre, anaB.PublishedYear, anaB.ISBN
 		FROM [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.BOOK anaB
-
-/*
-ETL Infastructure for inserting into Borrow Fact Table:
-1) Retrieve data from the operational database in the given order:
-	a. BorrowID
-	b. BookID
-	c. MemberID
-	d. AuthorID
-	e. BorrowDate
-2) Retrieve the key values from the analytical database and join them with the corresponding IDs.
-3) Insert the values with the keys in the given order:
-	a. BorrowID
-	b. BookKey
-	c. MemberKey
-	d. AuthorKey
-	e. CalendarKey (linked to BorrowDate)
-	d. BorrowDuration (calculated by ReturnDate-BorrowDate)
-	e. ReturnedLate (if ReturnDate-BorrowDate > 14, then value = 1. else, value = 0)
-4) Prevent existing data from repopulating. Use EXCEPT to remove existing data.
-*/
 
 INSERT INTO [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.BORROWFACT
 	--SELECTION
@@ -428,21 +346,6 @@ INSERT INTO [CITA 345 - Project 2 - Analytical DB Library Management System].dbo
 		anaBOR.ReturnedLate
 	FROM [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.BORROWFACT anaBOR
 
-
-/*
-ETL Process for inserting into BridgeBookCategory Fact Table
-
-1) Retrieve the bookID and CategoryID from each row in given order:
-	a. BookID
-	b. CategoryID
-2) Join the BookID onto the book dimension where op.BookID = analytical.BookID, and get THAT BookKey.
-3) Join the CategoryID onto the Category Dimension where op.CategoryID = analytical.CategoryID, and get THAT CategoryKey
-4) Insert the BookID-CategoryID key values as a new entry into the BridgeBookCategory Fact Table in the given order:
-	a. BookKey
-	b. CategoryKey
-5) Exclude exising rows from the insertion process. Use EXCEPT
-*/
-
 --Insertion into BRIDGEBOOKCATEGORYFACT
 INSERT INTO [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.BRIDGEBOOKCATEGORYFACT
 	--Row Selection
@@ -477,15 +380,6 @@ SELECT
 FROM DateRange
 OPTION (MAXRECURSION 32767);  -- Needed for large date ranges
 
-/*
-ETL Infastructure for inserting into Category Dimension
-
-1) Retrieve information from the operational DB category table in the following order:
-	a. CategoryID
-	b. CategoryName
-2) Insert the data into the analytical Category dimension. Use EXCEPT to exclude existing data in the dimension
-*/
-
 --Insertion into Category Dimension
 INSERT INTO [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.CATEGORY
 	--Row Selection
@@ -496,19 +390,6 @@ INSERT INTO [CITA 345 - Project 2 - Analytical DB Library Management System].dbo
 		SELECT anaC.CategoryID, anaC.CategoryName
 		FROM [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.CATEGORY anaC
 
-/*
-ETL Infastructure for inserting into Member Dimension
-
-1) Retrieve information from operational DB in given order:
-	a. MemberID
-	b. FirstName
-	c. LastName
-	d. Email
-	e. PhoneNumber
-	f. MembershipDate
-2) Insert the data into the analytical Member Dimension. Use EXCEPT to exclude data already in the dimension
-*/
-
 --Insertion into Member dimension
 INSERT INTO [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.MEMBER
 	--Row Selection
@@ -518,24 +399,6 @@ INSERT INTO [CITA 345 - Project 2 - Analytical DB Library Management System].dbo
 		EXCEPT
 		SELECT anaM.MemberID, anaM.FirstName, anaM.LastName, anaM.Email, anaM.PhoneNumber, anaM.MembershipDate
 		FROM [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.MEMBER anaM
-
-/*
-ETL Infastructure for inserting into Reservation Fact Table:
-1) Retrieve data from the operational database in the given order:
-	a. ReservationID
-	b. BookID
-	c. MemberID
-	d. AuthorID
-	e. ReservationDate
-2) Retrieve the key values from the analytical database and join them with the corresponding IDs.
-3) Insert the values with the keys in the given order:
-	a. ReviewID
-	b. BookKey
-	c. MemberKey
-	d. AuthorKey
-	e. CalendarKey (linked to BorrowDate)
-4) Prevent existing data from repopulating. Use EXCEPT to remove existing data.
-*/
 
 INSERT INTO [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.RESERVATIONFACT
 	--SELECTION
@@ -579,7 +442,7 @@ INSERT INTO [CITA 345 - Project 2 - Analytical DB Library Management System].dbo
   <button class="accordion-header">INSERT INTO Queries</button>
   <div class="accordion-content">
     <div class="code-block">
-      <h2>SQL Schema Setup</h2>
+
       <pre><code class="sql">
 INSERT INTO [CITA 345 - Project 2 - Analytical DB Library Management System].dbo.REVIEWFACT
 	--SELECTION
