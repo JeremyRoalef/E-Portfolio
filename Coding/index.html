@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Code Showcase</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header>
+    <h1>CITA 245 - Query Showcase</h1>
+    <nav>
+      <a href="../../index.html">🏠 Home</a>
+      <a href="../index.html">🎮 Back to Game Dev</a>
+      <a href="../../Artificial Intelligence/index.html">🤖 AI</a>
+      <a href="../../Coding/index.html">💻 Coding</a>
+      <a href="../../Databases/index.html">🗄️ Databases</a>
+	  <a href="../../3D_Modeling/index.html">🟠 Blender </a>
+    </nav>
+  </header>
+
+  <main>
+ 
+ <section class="accordion">
+  <button class="accordion-header">Fall 2023</button>
+  <div class="accordion-content">
+    <div class="accordion-body">
+		<!--Fall 2023 Video Games-->
+
+<section class="code-block">
+  <h2>Course Scheduler Application</h2>
+  <p class="code-desc">
+<a href="Files/Course_Scheduler.zip" class="download-btn" download>⬇ Get App</a>
+
+  </p>
+  
+    </div>
+  </div>
+</section>
+ 
+
+ <section class="accordion">
+  <button class="accordion-header">Spring 2024</button>
+  <div class="accordion-content">
+    <div class="accordion-body">
+		<!--Fall 2023 Video Games-->
+
+<section class="code-block">
+					<!--Sprint 2-->
+			<div class="accordion nested-accordion">
+			  <button class="accordion-header">Data Sorting Algorithm Analysis</button>
+			  <div class="accordion-content">
+			  				<section class="pdf-viewer">
+				  <h3>Documentation</h3>
+				  <button class="fullscreen-btn">🔎 Fullscreen</button>
+				  <iframe src="Files/Sort_Algorithms.pdf"
+						  width="100%" height="600px"
+						  style="border: 1px solid #ccc; border-radius: 4px;"
+						  class="pdf-frame">
+				  </iframe>
+				  </section>
+			  
+			  </div>
+			</div>
+		
+		
+					<!--Sprint 2-->
+			<div class="accordion nested-accordion">
+			  <button class="accordion-header">Inventory Management System: A Case Study of Data Structures & Algorithms</button>
+			  <div class="accordion-content">
+			  				<section class="pdf-viewer">
+				  <h3>Documentation</h3>
+				  <button class="fullscreen-btn">🔎 Fullscreen</button>
+				  <iframe src="Files/Inventory_Management_System.pdf"
+						  width="100%" height="600px"
+						  style="border: 1px solid #ccc; border-radius: 4px;"
+						  class="pdf-frame">
+				  </iframe>
+				  </section>
+			  
+			  </div>
+			</div>
+		
+    </div>
+  </div>
+</section>
+
+
+</main>
+<script>
+document.querySelectorAll('.accordion-header').forEach(button => {
+  button.addEventListener('click', () => {
+    const content = button.nextElementSibling; // .accordion-content
+
+    // If currently expanded (we used 'none' as the "fully open" marker)
+    const isExpandedInline = content.style.maxHeight && content.style.maxHeight !== '0px' && content.style.maxHeight !== 'none';
+
+    if (isExpandedInline || (content.style.maxHeight === 'none')) {
+      // Collapse: animate from current height -> 0
+      // If maxHeight is 'none' we need to set a fixed start height first:
+      if (content.style.maxHeight === 'none') {
+        // set explicit height equal to current full height
+        content.style.maxHeight = content.scrollHeight + 'px';
+        // force reflow before changing to 0 so transition runs
+        requestAnimationFrame(() => {
+          content.style.transition = 'max-height 0.35s ease';
+          content.style.maxHeight = '0';
+        });
+      } else {
+        // normal collapse
+        content.style.transition = 'max-height 0.35s ease';
+        content.style.maxHeight = '0';
+      }
+
+      // optional: remove 'none' marker if present after collapse completes
+      const onCollapseEnd = function () {
+        // ensure it's fully collapsed, then remove inline maxHeight to fall back to CSS default
+        if (content.style.maxHeight === '0px') {
+          content.style.maxHeight = ''; 
+        }
+        content.removeEventListener('transitionend', onCollapseEnd);
+      };
+      content.addEventListener('transitionend', onCollapseEnd);
+
+    } else {
+      // Expand: animate to scrollHeight then switch to 'none' so nested changes are allowed
+      content.style.transition = 'max-height 0.35s ease';
+      // set to required height to animate
+      content.style.maxHeight = content.scrollHeight + 'px';
+
+      // when animation ends, set maxHeight to 'none' so inner content can grow dynamically later
+      const onExpandEnd = function () {
+        content.style.maxHeight = 'none';
+        content.removeEventListener('transitionend', onExpandEnd);
+      };
+      content.addEventListener('transitionend', onExpandEnd);
+    }
+  });
+});
+</script>
+
+<script>
+document.querySelectorAll(".fullscreen-btn").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const iframe = btn.nextElementSibling; // assumes iframe is right after button
+    if (iframe.requestFullscreen) {
+      iframe.requestFullscreen();
+    } else if (iframe.webkitRequestFullscreen) { /* Safari */
+      iframe.webkitRequestFullscreen();
+    } else if (iframe.msRequestFullscreen) { /* IE11 */
+      iframe.msRequestFullscreen();
+    }
+  });
+});
+</script>
+</body>
+</html>
