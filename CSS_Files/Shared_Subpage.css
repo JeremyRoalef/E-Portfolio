@@ -1,30 +1,12 @@
+/* Shared Styles */
+
 /*Basics*/
-main {
-  max-width: 1200px;
-  width: 90%;
-  margin: 20px auto;
-  padding: 0 20px;
-}
-nav a {
-	 font-size: 20px;
-  margin: 0 10px;
-  color: white;
-  text-decoration: none;
-  font-weight: bold;
-}
-nav a:hover {
-  text-decoration: underline;
-}
 body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
   background: #f4f4f9;
   color: #333;
-}
-p {
-	font-size: 20px;
-	line-height: 1.2;
 }
 header {
   background: #0077cc;
@@ -36,17 +18,55 @@ header h1 {
 	 font-size: 36px;
   margin-bottom: 10px;
 }
+.pdf-viewer {
+  margin: 20px 0;
+  text-align: center;
+}
+.fullscreen-btn {
+  background: #0077cc;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.fullscreen-btn:hover {
+  background: #005fa3;
+}
+nav a {
+	 font-size: 20px;
+  margin: 0 10px;
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+nav a:hover {
+  text-decoration: underline;
+}
+p {
+	  font-size: 20px;  /* was ~16px */
+  line-height: 1.2;
+	
+}
 h1 {
-  font-size: 36px;
+  font-size: 36px;  /* was ~32px */
 }
 h2 {
-  font-size: 28px;
+  font-size: 28px;  /* was ~24px */
 }
 h3 {
-  font-size: 22px;
+  font-size: 22px;  /* was ~18px */
+}
+main {
+  max-width: 1200px;   /* give more space */
+  width: 90%;          /* responsive, adapts to screen size */
+  margin: 20px auto;
+  padding: 0 20px;
 }
 
-/* Accordions*/
+/* Accordion */
 .accordion {
   margin-bottom: 15px;
   border-radius: 8px;
@@ -54,11 +74,27 @@ h3 {
   background: white;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
+.accordion-header {
+  width: 100%;
+  text-align: left;
+  padding: 15px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border: none;
+  background: #e9f5ff;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+.accordion-header:hover {
+  background: #d6edff;
+}
+
+/* container whose height we animate */
 .accordion-content {
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.35s ease;
-  padding: 0;
+  padding: 0;              /* IMPORTANT: no vertical padding here */
   box-sizing: border-box;
   width: 100%;
 }
@@ -76,16 +112,8 @@ h3 {
 .accordion-header:hover {
   background: #d6edff;
 }
-.accordion-body {
-  padding: 5px 10px;
-}
 
-/*Nested Accordion*/
-.nested-accordion .accordion-body {
-  padding-left: 20px;
-}
-
-/*Game Cards*/
+/* Game Cards */
 .game-card {
   margin: 15px 0;
   padding: 15px;
@@ -107,10 +135,8 @@ h3 {
 .game-card a:hover {
   text-decoration: underline;
 }
-
-/*Project Cards*/
 .project-card {
-  margin: 10px 0;
+  margin: 10px 0; /* instead of 15px all around */
 }
 .project-card h3 {
   color: #0077cc;
@@ -127,29 +153,139 @@ h3 {
 .project-card a:hover {
   text-decoration: underline;
 }
+.accordion-body {
+  padding: 5px 10px; /* thinner space */
+}
+
+/*Nested Accordion*/
+.nested-accordion .accordion-body {
+  padding-left: 20px;      /* or whatever indentation you prefer */
+}
 .project-media {
   width: 100%;
-  max-height: 750px;
+  max-height: 750px;  /* increased from 250px */
   object-fit: contain;
   border-radius: 4px;
   margin: 10px 0;
 }
 
-/*Misc*/
-.pdf-viewer {
-  margin: 20px 0;
-  text-align: center;
+/*Dropdowns*/
+.dropdown-content a {
+  padding: 10px 15px;
+  font-size: 16px;
 }
-.fullscreen-btn {
-  background: #0077cc;
+.dropdown:hover > .dropdown-content {
+  display: block;
+}
+.dropdown-content li .dropdown-content {
+  top: 0;
+  left: 99%;      /* Slight overlap with parent menu */
+  margin-left: 0; /* Eliminate the gap */
+}
+.dropdown-content li:hover > .dropdown-content {
+  display: block;
+}
+.dropdown-content a,
+.dropdown-content .dropdown-btn {
+  font-size: 16px;
+  display: block;
+  text-align: left;
+  width: 100%;
   color: white;
+  background: none;
+  padding: 10px 15px;
   border: none;
-  padding: 8px 12px;
-  border-radius: 4px;
-  margin-bottom: 10px;
-  cursor: pointer;
-  font-size: 14px;
 }
-.fullscreen-btn:hover {
-  background: #005fa3;
+.dropdown-content a:hover,
+.dropdown-content .dropdown-btn:hover {
+  background-color: #005fa3;
+}
+.dropdown-content {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #0077cc;
+  min-width: 220px;
+  border-radius: 6px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  z-index: 10;
+}
+.dropdown-content li {
+  text-align: left;
+  position: relative;
+}
+.dropdown-btn:hover {
+  background-color: #005fa3;
+  border-radius: 4px;
+}
+.dropdown-btn {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 18px;
+  padding: 10px 15px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+.dropdown.open > .dropdown-content,
+.dropdown-sub.open > .dropdown-content {
+  display: block;
+}
+
+/*Menu & Nav Bar*/
+.navbar {
+  background-color: #0077cc;
+  text-align: center;
+  padding: 10px 0;
+}
+.menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+.menu > li {
+  position: relative;
+}
+.menu a,
+.menu a:hover,
+
+/*Sub Menus*/
+.sub-menu {
+  top: 0;
+  left: 90%;        /* slightly overlaps parent to avoid gap */
+  margin-left: 0;   /* removes the gap entirely */
+}
+
+/* Adjust for mobile */
+@media (max-width: 768px) {
+  .menu {
+    flex-direction: column;
+  }
+  .dropdown-content {
+    position: static;
+    box-shadow: none;
+    width: 100%;
+  }
+  .sub-menu {
+    position: static;
+  }
+}
+
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 15px;
+  background: #f4f4f9;
+  color: #666;
+  margin-top: 40px;
+  font-size: 0.9rem;
 }
