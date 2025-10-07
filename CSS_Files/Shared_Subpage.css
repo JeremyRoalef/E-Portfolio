@@ -182,6 +182,19 @@ main {
   left: 99%;      /* Slight overlap with parent menu */
   margin-left: 0; /* Eliminate the gap */
 }
+.dropdown > a.dropdown-btn {
+  display: inline-block;
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 18px;
+  padding: 10px 15px;
+  cursor: pointer;
+}
+.dropdown > a.dropdown-btn:hover {
+  background-color: #005fa3;
+  border-radius: 4px;
+}
 .dropdown-content li:hover > .dropdown-content {
   display: block;
 }
