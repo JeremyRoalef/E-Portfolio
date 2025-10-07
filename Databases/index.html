@@ -8,18 +8,56 @@
 </head>
 <body>
 
-  <!-- Header -->
-  <header>
-    <h1>Database Projects</h1>
+<header>
+  <h1>Database Projects</h1>
 
-    <!-- Navigation (moved back inside header) -->
-    <nav>
-      <a href="../index.html">🏠 Home</a>
-	  <a href="../Game Development/index.html">🎮 Game Dev</a>
-      <a href="../Coding/index.html">💻 Coding</a>
-	  <a href="../3D_Modeling/index.html">🟠 Blender </a>
-    </nav>
-  </header>
+<nav class="navbar">
+  <ul class="menu">
+    <li><a href="/index.html">🏠 Home</a></li>
+
+    <li class="dropdown">
+      <button class="dropdown-btn">🎮 Game Dev ▾</button>
+      <ul class="dropdown-content">
+        <li class="dropdown-sub">
+          <button class="dropdown-btn">Unity ▸</button>
+          <ul class="dropdown-content sub-menu">
+            <li><a href="/Game_Development/Unity/Fundamentals/index.html">Fundamentals</a></li>
+            <li><a href="/Game_Development/Unity/Intermediate/index.html">Intermediate</a></li>
+            <li><a href="/Game_Development/Unity/Advanced/index.html">Advanced</a></li>
+          </ul>
+        </li>
+        <li class="dropdown-sub">
+          <button class="dropdown-btn">Unreal ▸</button>
+          <ul class="dropdown-content sub-menu">
+            <li><a href="/Game_Development/Unreal/Projects/index.html">Projects</a></li>
+            <li><a href="/Game_Development/Unreal/Blueprints/index.html">Blueprint Work</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+
+    <li class="dropdown">
+      <button class="dropdown-btn">🎨 Asset Design ▾</button>
+      <ul class="dropdown-content">
+        <li class="dropdown-sub">
+          <button class="dropdown-btn">Blender ▸</button>
+          <ul class="dropdown-content sub-menu">
+            <li><a href="/Asset_Design/3D_Modeling/index.html">3D Modeling</a></li>
+            <li><a href="/Asset_Design/Texturing/index.html">Shading & Texturing</a></li>
+            <li><a href="/Asset_Design/Animation/index.html">Animation</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+
+    <li><a href="/Coding/index.html">💻 Coding</a></li>
+    <li><a href="/Databases/index.html">🗄️ Databases</a></li>
+    <li><a href="/Artificial_Intelligence/index.html">🤖 AI</a></li>
+  </ul>
+</nav>
+
+</header>
+
   <main>
   
 <!-- Fall 2024 Semester -->
@@ -137,7 +175,29 @@ document.querySelectorAll(".fullscreen-btn").forEach((btn) => {
   });
 });
 </script>
+<script>
+document.querySelectorAll('.dropdown-btn').forEach(button => {
+  button.addEventListener('click', (e) => {
+    e.stopPropagation(); // prevent bubbling
+    const parent = button.parentElement;
 
+    // Close all other dropdowns at the same level
+    const siblings = parent.parentElement.querySelectorAll(':scope > .open');
+    siblings.forEach(sib => {
+      if (sib !== parent) sib.classList.remove('open');
+    });
+
+    parent.classList.toggle('open');
+  });
+});
+
+// Optional: close dropdowns when clicking outside
+document.addEventListener('click', () => {
+  document.querySelectorAll('.dropdown.open, .dropdown-sub.open').forEach(drop => {
+    drop.classList.remove('open');
+  });
+});
+</script>
 
 
 </body>
