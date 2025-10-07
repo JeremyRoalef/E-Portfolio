@@ -1,14 +1,15 @@
 // Handles dropdown toggling logic
 document.querySelectorAll('.dropdown-btn').forEach(button => {
   button.addEventListener('click', (e) => {
-    e.stopPropagation();
     const parent = button.parentElement;
+    const hasSubmenu = parent.querySelector('.dropdown-content');
 
-    // Close other open dropdowns at the same level
-    const siblings = parent.parentElement.querySelectorAll(':scope > .open');
-    siblings.forEach(sib => { if (sib !== parent) sib.classList.remove('open'); });
-
-    parent.classList.toggle('open');
+    // Only prevent navigation if the button has a submenu
+    if (hasSubmenu) {
+      e.preventDefault();      // stop the link from navigating
+      e.stopPropagation();     // prevent click bubbling
+      parent.classList.toggle('open');
+    }
   });
 });
 
