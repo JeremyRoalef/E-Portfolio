@@ -170,6 +170,7 @@ main {
 }
 
 /*Dropdowns*/
+.dropdown { position: relative; }
 .dropdown-content a {
   padding: 10px 15px;
   font-size: 16px;
@@ -213,17 +214,7 @@ main {
 .dropdown-content .dropdown-btn:hover {
   background-color: #005fa3;
 }
-.dropdown-content {
-  display: none;
-  position: absolute;
-  top: 100%;
-  left: 0;
-  background-color: #0077cc;
-  min-width: 220px;
-  border-radius: 6px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-  z-index: 10;
-}
+.dropdown-content { display: none; position: absolute; top: 100%; left: 0; }
 .dropdown-content li {
   text-align: left;
   position: relative;
@@ -247,36 +238,45 @@ main {
 .dropdown-sub.open > .dropdown-content {
   display: block;
 }
+.dropdown-link {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 10px 12px;
+  display: inline-block;
+}
+.dropdown-toggle {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 6px 8px;
+  font-size: 14px;
+  line-height: 1;
+  margin-left: 4px;
+}
+.dropdown.open > .dropdown-content { display: block; }
 
+/*Menu & Nav Bar*/
 /*Menu & Nav Bar*/
 .navbar {
   background-color: #0077cc;
   text-align: center;
   padding: 10px 0;
 }
-.menu {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: inline-flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-}
+.menu { display: inline-flex; gap: 20px; align-items: center; }
 .menu > li {
   position: relative;
 }
 .menu a,
 .menu a:hover,
-
-/*Sub Menus*/
-.sub-menu {
-  top: 0;
-  left: 90%;        /* slightly overlaps parent to avoid gap */
-  margin-left: 0;   /* removes the gap entirely */
+.menu a:hover, .dropdown-toggle:hover {
+  background-color: #005fa3;
+  border-radius: 4px;
 }
 
+/*Sub Menus*/
+.sub-menu { left: 97%; top: 0; }
 
 /*Unity WebGL Games*/
 .game-layout {
@@ -365,17 +365,9 @@ pre {
 
 /* Adjust for mobile */
 @media (max-width: 768px) {
-  .menu {
-    flex-direction: column;
-  }
-  .dropdown-content {
-    position: static;
-    box-shadow: none;
-    width: 100%;
-  }
-  .sub-menu {
-    position: static;
-  }
+  .menu { flex-direction: column; }
+  .dropdown-toggle { margin-left: 0; }
+  .dropdown-content { position: static; width: 100%; }
 }
 
 /* Footer */
