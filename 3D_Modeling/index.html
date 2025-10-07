@@ -24,23 +24,11 @@
 	  </div>
 	</main>
 	
-<script>
-document.querySelectorAll(".fullscreen-btn").forEach((btn) => {
-  btn.addEventListener("click", () => {
-    const iframe = btn.nextElementSibling; // assumes iframe is right after button
-    if (iframe.requestFullscreen) {
-      iframe.requestFullscreen();
-    } else if (iframe.webkitRequestFullscreen) { /* Safari */
-      iframe.webkitRequestFullscreen();
-    } else if (iframe.msRequestFullscreen) { /* IE11 */
-      iframe.msRequestFullscreen();
-    }
-  });
-});
-</script>
+<!--Support fullscreen for pdf file-->
+<script src="https://jeremyroalef.github.io/E-Portfolio/JS_Files/Fullscreen.js"></script>
+<!--Load Navs-->
+<script src="https://jeremyroalef.github.io/E-Portfolio/JS_Files/Load_Nav.js"></script>
 
-  <!--Load Navs-->
-  <script src="https://jeremyroalef.github.io/E-Portfolio/JS_Files/Load_Nav.js"></script>
 </body>
 </html>
 
