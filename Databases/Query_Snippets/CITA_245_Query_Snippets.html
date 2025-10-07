@@ -260,59 +260,11 @@ SELECT cs.cssemester AS Semester, cs.csyear AS Year, f.ffirstname AS FirstName, 
 
 
 </main>
-<script>
-document.querySelectorAll('.accordion-header').forEach(button => {
-  button.addEventListener('click', () => {
-    const content = button.nextElementSibling; // .accordion-content
 
-    // If currently expanded (we used 'none' as the "fully open" marker)
-    const isExpandedInline = content.style.maxHeight && content.style.maxHeight !== '0px' && content.style.maxHeight !== 'none';
-
-    if (isExpandedInline || (content.style.maxHeight === 'none')) {
-      // Collapse: animate from current height -> 0
-      // If maxHeight is 'none' we need to set a fixed start height first:
-      if (content.style.maxHeight === 'none') {
-        // set explicit height equal to current full height
-        content.style.maxHeight = content.scrollHeight + 'px';
-        // force reflow before changing to 0 so transition runs
-        requestAnimationFrame(() => {
-          content.style.transition = 'max-height 0.35s ease';
-          content.style.maxHeight = '0';
-        });
-      } else {
-        // normal collapse
-        content.style.transition = 'max-height 0.35s ease';
-        content.style.maxHeight = '0';
-      }
-
-      // optional: remove 'none' marker if present after collapse completes
-      const onCollapseEnd = function () {
-        // ensure it's fully collapsed, then remove inline maxHeight to fall back to CSS default
-        if (content.style.maxHeight === '0px') {
-          content.style.maxHeight = ''; 
-        }
-        content.removeEventListener('transitionend', onCollapseEnd);
-      };
-      content.addEventListener('transitionend', onCollapseEnd);
-
-    } else {
-      // Expand: animate to scrollHeight then switch to 'none' so nested changes are allowed
-      content.style.transition = 'max-height 0.35s ease';
-      // set to required height to animate
-      content.style.maxHeight = content.scrollHeight + 'px';
-
-      // when animation ends, set maxHeight to 'none' so inner content can grow dynamically later
-      const onExpandEnd = function () {
-        content.style.maxHeight = 'none';
-        content.removeEventListener('transitionend', onExpandEnd);
-      };
-      content.addEventListener('transitionend', onExpandEnd);
-    }
-  });
-});
-</script>
-  <!--Load Navs-->
-  <script src="https://jeremyroalef.github.io/E-Portfolio/JS_Files/Load_Nav.js"></script>
+<!--Accordion JS-->
+<script src="https://jeremyroalef.github.io/E-Portfolio/JS_Files/Accordion.js"></script>
+<!--Load Navs-->
+<script src="https://jeremyroalef.github.io/E-Portfolio/JS_Files/Load_Nav.js"></script>
 
 </body>
 </html>
