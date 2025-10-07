@@ -1,5 +1,5 @@
 // Dynamically loads the shared navigation into pages
-fetch("https://jeremyroalef.github.io/E-Portfolio/Shared/nav.html")
+fetch("https://jeremyroalef.github.io/E-Portfolio/HTML_Files/nav.html")
   .then(response => {
     if (!response.ok) throw new Error("Failed to load nav.html");
     return response.text();
