@@ -275,29 +275,43 @@ main {
 }
 .navbar .menu,
 .navbar .menu ul {
-  list-style: none;   /* remove bullets */
-  margin: 0;          /* remove default top/bottom margin */
-  padding: 0;         /* remove default left indent */
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 .navbar .menu {
-  display: inline-flex;     /* horizontal layout */
-  gap: 20px;
+  display: inline-flex;
+  gap: 25px;
   align-items: center;
-  padding: 0;               /* ensure no extra padding */
+  justify-content: center;
 }
 .navbar .menu > li {
   position: relative;
-  display: inline-flex;
-  align-items: center;
+}
+.navbar .menu > li > a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 18px;
+  padding: 10px 15px;
+  border-radius: 4px;
+  transition: background 0.25s;
+}
+.navbar .menu > li > a:hover {
+  background-color: #005fa3;
 }
 .navbar .dropdown-content {
-  list-style: none;
-  margin: 0;
-  padding: 6px 0;          /* vertical breathing room for items */
-  background: #0077cc;     /* keep matching background (adjust if needed) */
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #0077cc;
+  min-width: 220px;
   border-radius: 6px;
-  min-width: 200px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  z-index: 10;
 }
+
 .navbar .dropdown-content > li {
   margin: 0;
   padding: 0;
@@ -307,6 +321,39 @@ main {
   padding: 8px 14px;
   color: white;
   text-decoration: none;
+  white-space: nowrap;
+}
+.navbar .dropdown:hover > .dropdown-content {
+  display: block;
+}
+
+.navbar .dropdown-content .dropdown-sub {
+  position: relative;
+}
+.navbar .dropdown-content .sub-menu {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 100%;
+  background-color: #0077cc;
+  min-width: 200px;
+  border-radius: 6px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+.navbar .dropdown-content .dropdown-sub:hover > .sub-menu {
+  display: block;
+}
+.navbar .dropdown-content a {
+  display: block;
+  padding: 10px 15px;
+  color: white;
+  text-decoration: none;
+}
+.navbar .dropdown-content a:hover {
+  background-color: #005fa3;
+}
+.navbar .dropdown-link {
+  display: inline-block;
   white-space: nowrap;
 }
 .navbar .menu li::marker { color: transparent; font-size: 0; }
