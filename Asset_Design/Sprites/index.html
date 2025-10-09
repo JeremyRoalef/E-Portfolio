@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Page Under Construction</title>
+  <link rel="stylesheet" href="/CSS_Files/Shared_Subpage.css" />
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      color: #333;
+      text-align: center;
+    }
+
+    header {
+      background-color: #0077cc;
+      color: white;
+      padding: 20px 0;
+      font-size: 24px;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    .construction-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: calc(100vh - 80px); /* subtract header height */
+      padding: 20px;
+    }
+
+    .construction-image {
+      max-width: 90%;
+      max-height: 80vh;
+      object-fit: contain;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+
+    .caption {
+      margin-top: 20px;
+      font-size: 20px;
+      color: #555;
+    }
+
+    /* Optional subtle animation */
+    .construction-image {
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-6px); }
+      100% { transform: translateY(0px); }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+	<div id="nav-placeholder"></div>
+  </header>
+
+
+  <header>
+    Nothing to see here (for now...)
+  </header>
+
+  <div class="construction-container">
+    <img 
+      src="https://jeremyroalef.github.io/E-Portfolio/Images/Cat.jpg" 
+      alt="Under Construction" 
+      class="construction-image" 
+    />
+  </div>
+<!--Load Navs-->
+<script src="https://jeremyroalef.github.io/E-Portfolio/JS_Files/Load_Nav.js"></script>
+</body>
+</html>
